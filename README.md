@@ -1,5 +1,22 @@
 # HTML
 
+## HTML和XHTML有什么区别
+
+HTML(HyperText Markup Language)超文本标记语言
+
+XHTML(Extensible HyperText Markup Language)可扩展超文本标记语言
+
+XHTML的表现方式与HTML类似，但比HTML更加严格
+
+1.XHTML元素必须被正确嵌套
+
+2.XHTML元素必须被关闭
+
+3.XHTML标签名必须小写
+
+4.XHTML必须有根元素
+
+
 ## 文档声明的作用
 
 H5的文档声明，声明当前网页是按照HTML5标准编写的
@@ -43,8 +60,7 @@ JS可通过元素的dataset属性接口以 驼峰命名 来访问
 
 ## HTML5语义化标签
 
-常用的语义化标签hgroup header nav section footer article aside
-
+常用的语义化标签hgroup header nav section footer article aside main
 ### hgroup
 
 可以将多个h1~h6元素放在其中，比如文章的主标题和副标题结合
@@ -55,7 +71,24 @@ JS可通过元素的dataset属性接口以 驼峰命名 来访问
 代表网页或者section的页眉
 通常包含h标签或者hgroup
 
-###
+### nav
+
+用于定义页面主要导航部分
+
+### section
+
+section元素代表文档中的节或段，段可以是一篇文章里按照主题的分段，节可以是指一个页面里的分组
+注意：section不是一般意义上的容器元素，如果想作为样式展示和脚本的便利，可以用div
+article，nav，aside可以理解为特殊的section，可以用article，nav，aside就不要用section
+
+### article
+
+article元素最容易跟section和div混淆，其实article代表一个在文档，页面或者网站中自成一体的独立内容
+
+### aside
+
+aside元素包含在article元素中作为主要内容的附属信息部分，其中的内容可以是与当前文章有关的相关资料，标签，名词解释等
+在article元素之外使用作为页面或站点全局的附属信息部分，最典型的是侧边栏，其中的内容可以是日志串连，其他组的导航
 
 # CSS相关
 
@@ -664,15 +697,11 @@ JavaScript采用的是词法作用域（静态作用域）
 
 #### 对象式环境记录
 
-
 主要用于with和global的词法环境
 
 ### 引用外部词法环境(outer)
 
 它是作用域链能够连起来的关键
-
-
-
 
 ## ES5严格模式语法和行为的改变
 
