@@ -17,13 +17,22 @@ XHTML的表现方式与HTML类似，但比HTML更加严格
 4.XHTML必须有根元素
 
 
-## 文档声明的作用
+## !DOCTYPE文档声明的作用
+
+H5不再是SGML的子集，所以H5不需要对DTD进行引用
 
 H5的文档声明，声明当前网页是按照HTML5标准编写的
+
 编写网页时一定要将H5的文档声明写在网页最上边
+
 如果不写文档声明，有些浏览器会进入兼容模式
+
 标准模式下网页的编排和JS运作模式都是以该浏览器支持的最高标准运行
+
 而在兼容模式下，页面则以宽松向后兼容的方式显示，模拟老式浏览器的行为以防止站点无法工作
+
+比如：因为若不声明DOCTYPE类型，IE浏览器会将盒子模型解释为IE盒子模型，FireFox等会将其解释为W3C盒子模型
+
 所以，为了页面的正常显示，一定要写文档声明
 
 ## 行内元素
@@ -34,13 +43,20 @@ a img input span textarea em strong i small cite q sup sub...
 
 div p h1 ul ol li form table...
 
+## 空元素
+
+br hr link script
+
 ## attribute与property
 
 attribute：HTML标签的预定义和自定义属性，设置的属性值只能为字符串
+
 property：JS对象的直接属性
 
 二者的同步关系：
+
 1.property为非布尔值属性时，二者是实时同步的
+
 2.property为布尔值属性时，attribute只会在第一次设置时影响property，之后二者不再同步
 
 所以操作布尔值属性最好用property，非布尔值属性用attribute
@@ -48,28 +64,71 @@ property：JS对象的直接属性
 ## HTML自定义属性
 
 date-xxx
+
 `<div id='test' data-name-a-b-ccc='北梦夏栀'> </div>`
 
 JS可通过元素的dataset属性接口以 驼峰命名 来访问
+
 `console.log(test.dataset.nameABCcc)`
 
-自定义属性命名规则
+自定义属性命名规则：
+
 1.该名称不能以xml开头，无论是这些字母的大写还是小写
+
 2.该名称不能包含任何分号
+
 3.该名称不能包含任何大写字母
+
+## meta标签
+
+meta常用于定义页面的说明，字符集，关键字、简介和其它的元数据。这些元数据将服务于浏览器（如何布局或重载页面），搜索引擎和其它网络服务。
+
+设置网页字符集
+`<meta charset="UTF-8" />`
+
+设置网页关键字
+`<meta name="keywords" content="网页的关键字" />`
+
+设置网页的描述
+`<meta name="description" content="网页的描述" />`
+
+设置viewport移动端视口
+`<meta name="viewport" content="width=device-width, initial-scale=1">`
+
+搜索引擎在检索页面时会检索页面中的关键字和描述
+
+## img的title和alt有什么区别
+
+title：当鼠标移动到元素上显示
+
+alt：img的特有属性，当图片无法成功加载时，页面会显示alt属性值，并且搜索引擎会对有alt属性的图片进行收录
+
+
+## HTML5新特性
+
+1.绘画 canvas
+
+2.用于媒介回放的 video 和 audio 元素
+
+3.本地存储localstorage,sessionstorage
+
+4.语义化标签，比如article、footer、header、nav、section
+
+5.新增表单属性type placeholder autofocus required pattern
 
 ## HTML5语义化标签
 
 常用的语义化标签hgroup header nav section footer article aside main
+
 ### hgroup
 
 可以将多个h1~h6元素放在其中，比如文章的主标题和副标题结合
-注意：连续多个标签
+
+注意：连续多个h标签才用hgroup
 
 ### header
 
-代表网页或者section的页眉
-通常包含h标签或者hgroup
+代表网页或者section的页眉，通常包含h标签或者hgroup
 
 ### nav
 
@@ -78,7 +137,9 @@ JS可通过元素的dataset属性接口以 驼峰命名 来访问
 ### section
 
 section元素代表文档中的节或段，段可以是一篇文章里按照主题的分段，节可以是指一个页面里的分组
+
 注意：section不是一般意义上的容器元素，如果想作为样式展示和脚本的便利，可以用div
+
 article，nav，aside可以理解为特殊的section，可以用article，nav，aside就不要用section
 
 ### article
@@ -88,9 +149,26 @@ article元素最容易跟section和div混淆，其实article代表一个在文�
 ### aside
 
 aside元素包含在article元素中作为主要内容的附属信息部分，其中的内容可以是与当前文章有关的相关资料，标签，名词解释等
+
 在article元素之外使用作为页面或站点全局的附属信息部分，最典型的是侧边栏，其中的内容可以是日志串连，其他组的导航
 
+## HTML5删除的标签
+
+big，center，font, s...
+
+frame，frameset，noframes
+
 # CSS相关
+
+## 两种盒模型
+
+IE盒模型和W3C标准盒模型
+
+IE盒模型的width和height是border-box
+
+W3C标准盒模型的width和height是content-box
+
+box-sizing: border-box; 将W3C盒模型转为IE盒模型
 
 ## CSS选择器
 
@@ -268,6 +346,32 @@ transform: translate3D(-50%, -50%, 0)
 top left right bottom:0
 margin: auto
 前提：已知元素高宽
+
+## CSS隐藏元素
+
+### display:none;
+
+不占据空间，无法响应事件
+
+### position+z-index
+
+不占据空间，无法响应事件
+
+### overflow:hidden;
+
+隐藏元素溢出部分，依然占据空间，但无法响应事件
+
+### visibility:hidden;
+
+依然占据空间，无法响应事件
+
+### transform:scale(0,0);
+
+依然占据空间，无法响应事件
+
+### opacity:0;
+
+透明度为0，依然占据空间，可响应事件
 
 # JavaScript相关
 
@@ -893,7 +997,7 @@ CSS的加载会阻塞渲染
 #### DOM事件响应线程
 #### 网络请求线程
 
-## 浏览器数据存储方式
+## 浏览器数据本地存储方式
 
 ### Cookies
 
@@ -957,14 +1061,51 @@ IndexedDB的特点：
 4.保存的数据会一直存在内存，没有过期时间，除非主动清除
 5.只用在客户端，不和服务器通信
 
+## HTML5 manifest 离线缓存
+
+### 原理
+
+当第一次请求后，浏览器会根据manifest文件上的离线存储资源清单进行本地缓存，
+之后的请求，浏览器会比较manifest文件是否修改
+如果未修改，则浏览器直接调用离线缓存无需再发送请求
+若修改，则浏览器重新下载更新离线存储资源
+若是离线状态下访问，浏览器直接使用离线存储的资源
+这使得用户在离线状态下也可访问站点的部分资源
+
+### 使用
+
+`<meta manifest = ‘demo.appcache’>`
+这个属性指向一个manifest的文件，这个文件指明了当前页面哪些资源需要进行离线缓存
+
+manifest配置文件分为三部分
+
+1.CACHE MANIFEST
+
+指出需要进行manifest的文件，此文件将在都在下载后被缓存下来
+
+2.NETWORK
+
+默认为*，表示除了CACHE外的其它所有资源都需要联网请求
+
+3.FALLBACK
+
+表示替代资源，这些资源加载不到就替代加载哪些资源
+
+
+### 离线缓存更新问题及解决方案
+
+只有当manifest文件改变时，浏览器才会重新下载离线存储资源
+
+但是在重新下载离线存储资源，页面加载已经开始了，若缓存更新尚未完成，浏览器还是会使用旧的缓存的资源。
+
+解决方案：
+添加事件监听，当监听到本地缓存更新后，进行重载页面，以达到更新的目的。
+
+```
+applicationCache.addEventListener("updateready", function(){
+    applicationCache.swapCache();      // 手工更新本地缓存
+    location.reload();    //重新加载页面页面
+},true);
+```
+
 # HTTP
-
-## TCP/IP五层模型
-
-![](_v_images/20200714211949613_31182.png =479x)
-
-## OSI七层模型
-
-![](_v_images/20200714212206066_28764.png =529x)
-
-## HTTP
