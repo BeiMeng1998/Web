@@ -458,7 +458,7 @@ margin: auto
 ```
     // js实现函数柯里化+偏函数
     function curryPartial(fn, args) {
-      // 获取函数形数个数
+      // 获取函数形参个数
       const length = fn.length
       // 获取实参数组
       args = args || []
@@ -1319,9 +1319,9 @@ IndexedDB的特点：
 
 ### 原理
 
-当第一次请求后，浏览器会根据manifest文件上的离线存储资源清单进行本地缓存，
+第一次访问时，浏览器会根据manifest文件上的离线存储资源清单进行本地缓存，
 
-之后的请求，浏览器会比较manifest文件是否修改
+之后的访问，浏览器会比较manifest文件是否修改
 
 如果未修改，则浏览器直接调用离线缓存无需再发送请求
 
