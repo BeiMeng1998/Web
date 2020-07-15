@@ -165,10 +165,15 @@ box-sizing: border-box; 将W3C盒模型转为IE盒模型
 ## CSS选择器
 
 ID选择器
+
 类选择器 伪类选择器 属性选择器
+
 元素选择器 伪元素选择器
+
 通配选择器
+
 子元素选择器 兄弟选择器 后代选择器
+
 交集选择器 并集选择器
 
 ## CSS选择器优先级
@@ -176,33 +181,46 @@ ID选择器
 ### 1.首先按来源排序
 
 CSS来源分三种：开发人员 用户(Internet选项-辅助功能-用户样式表）用户代理
+
 权重由高到低依次是：
+
 用户的重要声明
+
 开发人员的重要声明
+
 开发人员的正常声明
+
 用户的正常声明
+
 用户代理的声明
 
 ### 2.按选择器的特殊性排序
 
-1.内联声明行内声明特殊性 1 0 0 0
+1.内联声明/行内声明特殊性 1 0 0 0
+
 2.ID选择器特殊性 0 1 0 0
+
 3.类，属性和伪类选择器特殊性 0 0 1 0
+
 4.元素和伪元素选择器特殊性 0 0 0 1
+
 5.通配选择器特殊性 0 0 0 0
+
 6.继承没有特殊性
+
 7.结合符对选择器特殊性没有一点贡献
 
 当使用多个选择器与同一元素匹配时，不进位地计算其特殊性值，特殊性越大权重越高
 
 重要声明也就是 !important 并没有特殊的特殊性值
+
 浏览器会将正常声明和重要声明分为两组，两组内的声明冲突会在其内部解决
+
 而当一个正常声明和重要声明冲突时，胜出的总是重要声明
 
 ### 3.顺序排序
 
 如果选择器特殊性相同则按照顺序排序
-
 
 ## BFC(Block formatting context)
 
@@ -211,46 +229,71 @@ CSS来源分三种：开发人员 用户(Internet选项-辅助功能-用户样�
 ### BFC布局规则
 
 1.内部的Box会在垂直方向上一个接一个放置
+
 2.Box垂直方向上的距离由margin决定，同属于同一个BFC的两个相邻的Box的margin会发生重叠（兄弟元素margin重叠问题）
+
 3.Box的margin-box与包含块的content-box相接触
+
 4.BFC区域不会与float-box重叠（两列布局）
+
 5.计算BFC高度时，浮动元素也参与计算
+
 6.BFC是页面上的一个隔离的独立容器，容器里的元素不会影响到外部元素，反之亦然
 
 ### BFC开启方式
 
 1.根元素
+
 2.float不为none
+
 3.position为absolute或fixed
+
 4.overflow不为visible
+
 5.display为inline-block, table-ceil, table-caption, flex, inline-flex
 
 ## 三列布局
 
 三列布局的要求
+
 1.中间优先加载
+
 2.两边固定，中间自适应
 
 ### 圣杯布局
 
 左右两列固定200px中间列自适应
+
 内容区三列，HTML结构先写中间列然后左列右列
+
 中间列width: 100%;
+
 三列全部浮动，内容区清除浮动
+
 左列margin-left: -100%; 将左列提升到上一行最左侧
+
 右列margin-left: -200px; 将右列提升到上一行最右侧
+
 内容区padding: 0 200px; 为左右两列留出空间
+
 左列position: relative; left: -200px;
+
 右列position: relative; left: 200px;
 
 ### 双飞翼布局
 
 左右两列固定200px中间列自适应
+
 内容区三列，HTML结构先写中间列然后左列右列
+
 中间列用warp包裹
+
 wrap的width: 100%;
+
 左列margin-left: -100%; 将左列提升到上一行最左侧
+
 右列margin-left: -200px; 将右列提升到上一行最右侧
+
 中间列padding: 0 200px; 为左右两列留出空间
 
 与圣杯布局的区别是不使用float和定位
@@ -258,35 +301,53 @@ wrap的width: 100%;
 ### flex布局
 
 左右两列固定200px中间列自适应
+
 内容区三列，HTML结构先写中间列然后左列右列
+
 内容区display: flex;
+
 左右两列width: 200px; 或flex-basis: 200px;
+
 中间列flex-grow: 1; 或flex: 1;设置拉伸因子为1 或者width: 100%
+
 三列设置order 左中右排列
 
 ### Grid布局
 
 左右两列固定200px中间列自适应
+
 内容区三列，HTML结构先写中间列然后左列右列
+
 内容区
+
 display: grid;
+
 grid-template-columns: 200px auto 200px;
+
 grid-template-areas: 'left center right';
+
 中间列
-grid-area: center; 
+
+grid-area: center;
 
 ## 绝对定位模拟固定定位
 
 原理：绝对定位是相对于最先开启定位的祖先元素定位，若无，则相对于初始包含块定位
+
 而浏览器默认滚动条并不是在html或body上，而是在初始包含块上
+
 也就是说滚动滚动条移动了初始包含块从而导致了绝对定位元素的移动
+
 所以将滚动条绑定body上就可以滚动滚动条不移动初始包含块，从而绝对定位模拟固定定位
+
+```
 html {
     overflow: hidden;
 }
 body {
     overflow: auto;
 }
+```
 
 ## 垂直排列兄弟元素margin重叠问题
 
@@ -303,6 +364,7 @@ body {
 ## IE CSS hack
 
 类内属性前缀法 和 条件注释法
+
 用来设置不同IE版本对CSS的识别性
 
 ## 元素垂直水平居中方案
@@ -312,31 +374,47 @@ body {
 #### flex
 
 容器：
+
 display: flex;
+
 justify-content: center;
+
 align-items: center
 
 #### Grid
 
 容器：
+
 display: grid;
+
 justify-content: center;
+
 align-items: center
 
 ### 使用定位
 
 容器：相对定位
+
 元素绝对定位
+
 top left: 50%
+
 transform: translate3D(-50%, -50%, 0)
 
 或者利用绝对定位盒子的特性
+
 水平方向上：left + right + width + padding + margin = 包含块的content-box
+
 垂直方向上：top + bottom + height + padding + margin = 包含块的content-box
+
 容器：相对定位
+
 元素绝对定位
+
 top left right bottom:0
+
 margin: auto
+
 前提：已知元素高宽
 
 ## CSS隐藏元素
@@ -367,29 +445,85 @@ margin: auto
 
 # JavaScript相关
 
+## JS实现函数柯里化+偏函数组合应用
+
+什么是柯里化？
+
+多参数函数转换为一系列单参数函数的技术
+
+什么是偏函数？
+
+多函数参数，每次应用其一个或多个参数，但不是全部参数，在这个过程中创建一个新函数，这个函数用于接受剩余的参数。
+
+```
+    // js实现函数柯里化+偏函数
+    function curryPartial(fn, args) {
+      // 获取函数形数个数
+      const length = fn.length
+      // 获取实参数组
+      args = args || []
+      // 返回柯里化函数
+      return function () {
+        // 实参数组整合
+        const argsArray = args.concat(Array.from(arguments))
+        // 如果实参个数小于形参个数
+        if (argsArray.length < length) {
+          // 继续整合
+          return curryPartial.call(this, fn, argsArray)
+        } else {
+          // 当实参整合完成调用函数
+          return fn.apply(this, argsArray)
+        }
+      }
+    }
+    var fn = curryPartial(function (a, b, c) {
+      console.log([a, b, c]);
+    });
+
+    fn("a", "b", "c") // ["a", "b", "c"]
+    fn("a", "b")("c") // ["a", "b", "c"]
+    fn("a")("b")("c") // ["a", "b", "c"]
+    fn("a")("b", "c") // ["a", "b", "c"]
+```
 ## JS中为什么 0.1+0.2 !== 0.3
 
 JS中Number数据类型遵循IEEE 754标准
-![](_v_images/20200711222038561_27123.png =480x)
+
+64位二进制从左往右依次为：
+
 第63位：符号位，0表示正数，1表示负数(s)
+
 第62位到第52位：储存指数部分（e）
+
 第51位到第0位：储存小数部分（即有效数字）f
 
 但JS的最大安全数 Number.MAX_SAFE_INTEGER = Math.pow(2,53)-1
+
 因为二进制有效数字总是 1.xxxxxxx (xxxxxxx为尾数部分f，有效数字首位默认为1}
+
 因此JS二进制有效数字长度为53（64位浮点的前52位+被省略的1位）
 
 在运算 0.1+0.2 的过程中两处产生精度损失
+
 1.进制转换
+
 0.1转二进制0.0001100110011001100110011001100110011001100110011001101(无限循环)
+
 0.2转二进制
+
 0.001100110011001100110011001100110011001100110011001101(无限循环)
+
 超过IEEE 754尾数位置限制将被截取
+
 2.对阶运算
+
 由于指数位数不相同，运算时需要对阶运算 这部分也可能产生精度损失
 
 最终造成 0.1+0.2 !== 0.3 的结果
-注：JS二进制有效数字长度为53，最大安全数十进制（9007199254740991）为16位，因此0.1.toPrecision(16) = 0.10000000000000000导致 0.1 还是 0.1
+
+注：JS二进制有效数字长度为53，最大安全数十进制（9007199254740991）为16位，因此0.1.toPrecision(16) = 0.10000000000000000导致 0.1 还
+
+是 0.1
 
 解决方法:
 ```
@@ -403,11 +537,14 @@ function add(num1, num2) {
 
 ## 隐式转换
 
-转换布尔类型为false：NaN null undefined +0 -0 '' document.all  （7）
-转换为Number为0：false '' null     (3)  注意undefined转换为NaN
+转换布尔类型为false：NaN null undefined +0 -0 '空串' 以及H5废弃的document.all  （7）
+
+转换为Number为0：false '空串' null     (3)  注意undefined转换为NaN
+
 转换为String，注意null，undefined不是调用toString()方法，而是直接返回 'null'  'undefined'
 
 判断的基本规则：
+
 对象 == 数字或字符串
 toPrimitive(对象) ： 对象.valueOf().toString()
 
@@ -445,12 +582,19 @@ if (a == 1 && a == 12 && a == 23) {
     console.log(true)
 }
 ```
+
 引用类型隐式转换为原始类型流程：
+
 调用toPrimitive()内部函数
+
 1.是否为原始类型？是则返回
+
 2.否则调用valueOf()方法，返回值是否为原始类型？是则返回
+
 3.否则调用toString()方法，返回值是否为原始类型？是则返回
+
 4.否则，抛出错误
+
 所以我们可以通过定义引用对象的valueOf()或toString()方法来覆盖Object.prototype的方法
 
 ```
@@ -471,6 +615,7 @@ JS三个包装类：Number() String() Boolean()
 作用：将基本数据转换为引用数据类型，
 
 当我们对一些基本数据类型的值去调用属性和方法时，浏览器会临时使用包装类将其转换为对象，然后在调用对象的属性和方法
+
 调用完以后，再将其转换为基本数据类型
 
 ## this指向
@@ -483,9 +628,9 @@ JS三个包装类：Number() String() Boolean()
 
 2.以方法的形式调用时，this就是调用方法的那个对象
 
-3.当以构造函数的形式调用时，this就是新创建的那个对象（实例）
+3.当以构造函数的形式调用时，this就是新创建的实例对象
 
-4.使用call() apply() bind()调用时，this是指定的那个对象
+4.使用call() apply() bind()调用时，this是指定的第一个参数
 
 5.在绑定监听时，给谁绑定，回调函数中的this就是谁
 
@@ -494,7 +639,10 @@ JS三个包装类：Number() String() Boolean()
 ## call() apply() bind()的区别
 
 call和apply改变了函数的this上下文后便执行该函数,而bind则是返回改变了上下文后的一个新函数。
-call和apply之间的差别在于参数的区别，call和apply的第一个参数都是要改变上下文的对象，而call从第二个参数开始以参数列表的形式展现，apply则是将参数放在一个数组里面作为它的第二个参数。
+
+call和apply之间的差别在于参数的区别，call和apply的第一个参数都是要改变上下文的对象，
+
+而call从第二个参数开始以参数列表的形式展现，apply则是将参数放在一个数组里面作为它的第二个参数。
 
 ## new的执行过程
 
@@ -547,17 +695,21 @@ previousSibling nextSibling
 ### 增
 
 createElement() createTextNode()
+
 父节点.appendChild(子节点)
+
 父节点.insertBefore(新节点, 旧节点)
 
 ### 改
 
 父节点.replaceChild(新节点, 旧节点)
+
 innerHTML
 
 ### 删
 
 父节点.removeChild(子节点)
+
 自删：子节点.parentNode.removeChild(子节点)
 
 ## DOM绑定/解绑监听
@@ -565,30 +717,43 @@ innerHTML
 以click事件为例
 
 DOM0级
+
 Element.onclick = () => {}
+
 优点：兼容性好
-缺点：只能为一个元素的一个事件绑定一个回调函数
-如果绑定多个，则后绑会覆盖先绑
+
+缺点：只能为一个元素的一个事件绑定一个监听函数，如果绑定多个，则后绑会覆盖先绑
+
 解绑：赋值null
 
 DOM2级
-Element.addEventListener(('click', () => {}, false))
-参数：
-    1.事件的字符串，不要on
-    2.回调函数，当事件触发时该函数会被调用
-    3.是否在捕获阶段触发事件，需要一个布尔值，默认都传false
 
-优点：可以为一个元素的一个事件绑定多个回调函数
-多个回调函数按绑定顺序执行
+Element.addEventListener(('click', () => {}, false))
+
+参数：
+
+1.事件的字符串，不要on
+
+2.回调函数，当事件触发时该函数会被调用
+
+3.是否在捕获阶段触发事件，需要一个布尔值，默认都传false
+
+优点：可以为一个元素的一个事件绑定多个回调函数，多个回调函数按绑定顺序执行
+
 缺点：兼容性不好，不支持IE8及以下
+
 解绑：removeEventListener，三个参数必须全部一致才能解绑
 
 IE8及以下可使用attachEvent()来给元素同一事件绑定多个监听
+
 参数：
-    1.事件的字符串，要on
-    2.回调函数，当事件触发时该函数会被调用
+
+1.事件的字符串，要on
+
+2.回调函数，当事件触发时该函数会被调用
 
 与addEventListener的区别：
+
 先绑定后执行，this上下文不是指向绑定元素而是window
 
 解绑：detachEvent()，两个参数必须全部一致才能解绑
@@ -599,7 +764,9 @@ IE8及以下可使用attachEvent()来给元素同一事件绑定多个监听
 
 ### 捕获阶段
 
-从最外层祖先元素，向目标元素进行事件的捕获，默认此时不会触发事件（addEventListener第三个参数为false, attachEvent没有第三个参数因为IE8及以下没有捕获阶段）
+从最外层祖先元素，向目标元素进行事件的捕获，默认此时不会触发事件
+
+（addEventListener第三个参数为false, attachEvent没有第三个参数因为IE8及以下没有捕获阶段）
 
 ### 目标阶段
 
@@ -608,6 +775,7 @@ IE8及以下可使用attachEvent()来给元素同一事件绑定多个监听
 ### 冒泡阶段
 
 事件从目标元素向他的祖先元素传递，依次触发祖先元素上的事件
+
 阻止冒泡：event.stopPropagation()
 
 ## 事件委派（利用事件冒泡）
@@ -623,12 +791,15 @@ IE8及以下可使用attachEvent()来给元素同一事件绑定多个监听
 ### 内存的生命周期
 
 1.分配内存，得到使用权
+
 2.存储数据进行反复操作
+
 3.释放内存空间
 
 ### 释放内存
 
 1.局部变量：函数执行完自动释放
+
 2.对象：称为垃圾对象（无变量引用 ） => 垃圾回收机制回收
 
 ## JavaScript垃圾回收机制
@@ -659,20 +830,25 @@ A, B二个对象的堆内存的引用次数均为2，会一直存在于内存中
 ### 显式原型与隐式原型
 
 每个函数对象都有 prototype，它默认指向一个Object实例对象，即 显式原型
-prototype 中有一个属性为 constructor 它指向函数对象
+
+prototype
 
 每个实例对象都有__proto__，即隐式原型，__proto__指向其构造函数的 prototype
 
 ### 原型链
 
 原型链即隐式原型链
+
 实例对象的隐式原型指向其构造函数的显式原型
+
 注意点：
+
 1.Object和Function都是函数，所有函数都是Function的实例，所以其隐式原型均指向Function.prototype
 
 2.Object.prototype.__proto__ = null
 
 当访问一个实例对象的属性时
+
 1.先在实例对象自身的属性中查找，找到返回，否则
 
 2.沿着原型链向上查找，找到返回，否则
@@ -682,11 +858,13 @@ prototype 中有一个属性为 constructor 它指向函数对象
 ## instanceof
 
 A instanceof B
-A的隐式原型链是否经过B的显式原型
+
+在同一全局环境下，A的隐式原型链是否经过B的显式原型
 
 ## 预解析
 
 var 提前申明，但不赋值，执行到才赋值
+
 function 提前声明且定义
 
 ## 执行上下文
@@ -700,7 +878,7 @@ var 提前声明不赋值，添加为window的属性
 function 提前声明且定义，添加为window的方法
 this上下文指向window
 
-3.开始执行全局代码
+3.压栈，执行全局代码
 
 ### 函数执行上下文
 
@@ -711,7 +889,7 @@ this上下文指向window
 var 提前声明不赋值，添加为函数执行上下文的属性
 function 提前声明且定义，添加为函数执行上下文的方法
 
-3.开始执行函数代码
+3.压栈，执行函数代码
 
 ## 执行上下文栈
 
@@ -736,6 +914,7 @@ JavaScript采用的是词法作用域（静态作用域）
 ## 作用域链
 
 通过词法环境的对外部词法环境的引用（outer）将作用域链起
+
 变量可通过作用域链逐层向上查找
 
 ## 闭包
@@ -746,12 +925,14 @@ JavaScript采用的是词法作用域（静态作用域）
 
 ### 如何产生闭包？
 
-1.当函数引用外部词法环境时
+1.当内部函数引用外部词法环境
+
 2.执行外部函数
 
 ### 闭包的作用
 
 1.延长局部变量的生命周期
+
 2.让函数外部可操作函数内部的数据
 
 ### 闭包可能导致的问题
@@ -771,9 +952,12 @@ JavaScript采用的是词法作用域（静态作用域）
 ### 关系
 
 应用程序必须运行在一个进程的某个线程上
+
 一个进程至少有一个运行的线程，也就是主线程
+
 一个进程多线程运行时，线程之间数据共享
-多个进程之间的数据不饿能直接共享
+
+多个进程之间的数据不能直接共享
 
 ## 词法环境
 
@@ -795,15 +979,18 @@ JavaScript采用的是词法作用域（静态作用域）
 
 主要用于with和global的词法环境
 
-### 引用外部词法环境(outer)
+### 对外部词法环境的引用(outer)
 
 它是作用域链能够连起来的关键
 
 ## ES5严格模式语法和行为的改变
 
 1.必须用var声明变量
+
 2.禁止自定义函数this指向window
+
 3.创建eval作用域
+
 4.对象不能有重名属性
 
 ## let与const
@@ -813,9 +1000,13 @@ JavaScript采用的是词法作用域（静态作用域）
 用于声明一个变量
 
 特点：
+
 拥有块级作用域
+
 不能重复声明
+
 没有预解析，存在暂时性死区
+
 全局声明不会称为window的属性
 
 ### const
@@ -823,10 +1014,15 @@ JavaScript采用的是词法作用域（静态作用域）
 用于声明一个常量
 
 特点：
+
 不能修改
+
 拥有块级作用域
+
 不能重复声明
+
 没有预解析，存在暂时性死区
+
 全局声明不会称为window的属性
 
 ## ...三点运算符
@@ -839,10 +1035,13 @@ JavaScript采用的是词法作用域（静态作用域）
 
 ### 浅拷贝
 
-拷贝指针，修改拷贝后的数据会影响源数据，使得原数据不安全
-常见的如
+拷贝指针，修改拷贝后的数据会影响原数据，使得原数据不安全
+
+常见的浅拷贝如：
 Array方法的slice，concat
+
 Object方法的assign
+
 以及...扩展运算符都是浅拷贝
 
 ### 深拷贝
@@ -857,8 +1056,13 @@ Object方法的assign
 
 1.判断数据类型
 
-为什么不用typeof？因为typeof判断array,object,null均返回'object'
+typeof 注意：typeof判断array,object,null均返回'object'
+
 Object.prototype.toString.call(param).slice(8, -1)
+
+Array.isArray()
+
+A instanceof B
 
 2.遍历递归
 
@@ -882,6 +1086,7 @@ Object.prototype.toString.call(param).slice(8, -1)
 ### instanceof
 
 缺陷：instanceof假定只有一个全局环境，如果网页中包含多个框架，那实际上就存在两个以上不同的全局执行环境，从而存在两个以上不同版本的Array构造函数。
+
 如果你从一个框架向另一个框架传入一个数组，那么传入的数组与在第二个框架中原生创建的数组分别具有各自不同的构造函数。
 
 ### param.constructor === Array
@@ -891,6 +1096,12 @@ Object.prototype.toString.call(param).slice(8, -1)
 ### Object.prototype.toString.call(param).slice(8, -1)
 
 ### Array.isArray(param)
+
+## 判断一个对象是否是空对象
+
+`String(obj) === '[object Object] && Reflect.ownKeys(obj).length === 0'`
+
+Reflect.ownKeys() 为 Object.getOwnPropertyNames() 与 Object.getOwnPropertySymbols() 二者 concat() 之后的数组
 
 ## super关键字 与 super()
 
@@ -915,12 +1126,17 @@ Object.setPrototypeOf(friend, person)
 ### super()
 
 派生类构造器中
-super(params) = 基类.call(this, params)
+
+super(params) 相当于 基类.call(this, params)
+
 所以派生类构造器中的super()是用来初始化this
 
 super()使用注意点
+
 1.你只能在派生类中使用super()。若尝试在非派生的类（即：没有使用extends关键字的类）或函数中使用它，就会抛出错误。
+
 2.在构造器中，你必须在访问this之前调用super()。由于super()负责初始化this，因此试图先访问this自然就会造成错误。
+
 3.唯一能避免调用super()的办法，是从类构造器中返回一个对象。
 
 ## class关键字
@@ -928,15 +1144,26 @@ super()使用注意点
 class关键字是以ES5组合继承为基础的一个语法糖，但是它和组合继承又有区别
 
 1.组合继承的自定义function构造函数存在变量提升，而类声明类似于let，没有变量提升，存在暂时性死区
+
 2.类声明中的所有代码会自动运行在严格模式下，且无法退出严格模式
+
 3.类的所有方法都是不可枚举的，而自定义构造函数只有通过Object.defineProperty()才能将方法改为不可枚举
+
 4.类的所有方法内部都没有constructor，使用new调用类的方法会报错
+
 5.调用类构造器时，不加new会报错
+
 6.在类的方法内部尝试重写类名会报错
 
 # Web相关
 
 ## 同源政策
+
+同源政策的目的，是为了保证用户信息的安全，防止恶意的网站窃取数据。
+
+同源：同协议，同域名，同接口
+
+## 跨域的解决方案
 
 
 
@@ -949,10 +1176,13 @@ class关键字是以ES5组合继承为基础的一个语法糖，但是它和组
 #### JS引擎线程（V8引擎中JS编译执行过程）
 
 将要执行全局代码时，创建JS执行栈，创建全局执行上下文并进行压栈
+
 当执行到函数时，创建函数执行上下文并进行压栈
 
 V8引擎在拿到执行上下文后对其代码逐行做分词分析以及词法分析
+
 分词分析就是将如 var a = 2; 拆分成 var, a, =, 2, ;,这样的原子符号
+
 词法分析就是指：登记变量声明，函数声明（登记的地方为词法环境）
 
 在分词结束后，V8会做代码解析，将分好的原子符号解析翻译成一个抽象语法树，在这一步时，若发现语法错误，则会报错不再往下执行
@@ -962,12 +1192,19 @@ V8引擎在拿到执行上下文后对其代码逐行做分词分析以及词法
 #### GUI渲染线程
 
 负责渲染浏览器页面
+
 渲染过程
+
 1.解析HTML构建DOM树
-2.解析CSS构建Style Rules
-3.DOM树和Style Rules结合形成Render树
+
+2.解析CSS构建CSSOM
+
+3.DOM树和CSSOM结合形成Render树
+
 4.布局Render树，负责元素的尺寸和位置（回流）
+
 5.绘制Render树（重绘）
+
 6.将各层信息发送给GPU进程，GPU将各层合成，显示在页面上
 
 CSS的加载会阻塞渲染
@@ -975,8 +1212,11 @@ CSS的加载会阻塞渲染
 #### 重绘回流与硬件加速
 
 标准文档流以及position为absolute，fixed都属于默认复合层
+
 元素的位置的改变会引起回流和重绘，元素样式改变会引起重绘，影响浏览器性能
+
 因为GPU是专门为处理图形而设计，所以它在速度和能耗上更有效率。
+
 通过GPU硬件加速的方式（transform、opacity、filters），声明一个新的复合图层，它会单独分配资源，这样就不会影响默认复合图层，从而避免重绘与回流
 
 注意:如果a是一个复合图层，而且b在a上面，那么b也会被隐式转为一个复合图层
@@ -994,15 +1234,21 @@ CSS的加载会阻塞渲染
 ### Cookies
 
 由于HTTP是无状态协议，Cookies的出现是为了保存HTTP状态
+
 服务器发送请求set-cookie之后，浏览器保存Cookies之后浏览器的每次HTTP请求都会携带Cookies的信息
 
 JS也可通过document.cookie读取和设置
 
 Cookies的特点：
+
 1.遵循同源政策
+
 2.Cookies的大小限制在4KB左右，超过4KB直接截断
+
 3.过多的Cookies会导致性能浪费，因为同一域名下的所有请求都会携带Cookies
+
 4.一般由服务器生成，可设置过期时间
+
 5.和服务器通信
 
 ### LocalStorage
@@ -1017,15 +1263,21 @@ localStorage.clear();
 ```
 
 LocalStorage的特点：
+
 1.遵循同源政策
+
 2.大小为5M左右
+
 3.可以在Tab之间数据通信
+
 4.保存的数据会一直存在内存，没有过期时间，除非主动清除
+
 5.只用在客户端，不和服务器通信
 
 ### SessionStorage
 
 H5新增的本次存储方案
+
 与LocalStorage相比，只用于当前浏览器的一次会话，浏览器关闭，数据清空
 
 ```
@@ -1036,10 +1288,15 @@ sessionStorage.clear();
 ```
 
 SessionStorage的特点：
+
 1.遵循同源政策
+
 2.大小为5M左右
+
 3.每次Tab创建各自的SessionStorage
+
 4.浏览器关闭，当前SessionStorage清空
+
 5.只用在客户端，不和服务器通信
 
 ### IndexedDB
@@ -1047,10 +1304,15 @@ SessionStorage的特点：
 它是一个运行在浏览器上的非关系型数据库，它的大小是没有存储上限的。
 
 IndexedDB的特点：
+
 1.遵循同源政策
+
 2.存储空间大，没有上限
+
 3.异步操作，不会造成浏览器卡死
+
 4.保存的数据会一直存在内存，没有过期时间，除非主动清除
+
 5.只用在客户端，不和服务器通信
 
 ## HTML5 manifest 离线缓存
@@ -1058,10 +1320,15 @@ IndexedDB的特点：
 ### 原理
 
 当第一次请求后，浏览器会根据manifest文件上的离线存储资源清单进行本地缓存，
+
 之后的请求，浏览器会比较manifest文件是否修改
+
 如果未修改，则浏览器直接调用离线缓存无需再发送请求
+
 若修改，则浏览器重新下载更新离线存储资源
+
 若是离线状态下访问，浏览器直接使用离线存储的资源
+
 这使得用户在离线状态下也可访问站点的部分资源
 
 ### 使用
@@ -1073,7 +1340,7 @@ manifest配置文件分为三部分
 
 1.CACHE MANIFEST
 
-指出需要进行manifest的文件，此文件将在都在下载后被缓存下来
+指出需要进行manifest的文件，声明的文件都将被下载缓存下来
 
 2.NETWORK
 
@@ -1091,11 +1358,12 @@ manifest配置文件分为三部分
 但是在重新下载离线存储资源，页面加载已经开始了，若缓存更新尚未完成，浏览器还是会使用旧的缓存的资源。
 
 解决方案：
+
 添加事件监听，当监听到本地缓存更新后，进行重载页面，以达到更新的目的。
 
 ```
 applicationCache.addEventListener("updateready", function(){
-    applicationCache.swapCache();      // 手工更新本地缓存
+    applicationCache.swapCache();      // 手动更新本地缓存
     location.reload();    //重新加载页面页面
 },true);
 ```
