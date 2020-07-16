@@ -1,5 +1,5 @@
 # HTML
-
+<a url='HTTP'>aaa<a>
 ## HTML和XHTML有什么区别
 
 HTML(HyperText Markup Language)超文本标记语言
@@ -31,7 +31,7 @@ H5的文档声明，声明当前网页是按照HTML5标准编写的
 
 而在兼容模式下，页面则以宽松向后兼容的方式显示，模拟老式浏览器的行为以防止站点无法工作
 
-比如：若不声明DOCTYPE类型，IE浏览器会将盒子模型解释为IE盒子模型，FireFox等会将其解释为W3C盒子模型
+比如：若不声明DOCTYPE类型，IE678浏览器会将盒子模型解释为IE盒子模型，FireFox等会将其解释为W3C盒子模型
 
 所以，为了页面的正常显示，一定要写文档声明
 
@@ -357,15 +357,42 @@ body {
 
 给其中兄弟元素裹上wrap，wrap overflow为hidden开启BFC
 
+## 父子元素margin传递问题
+
+当两个空的块级元素嵌套时，如果内部块设置有margin-top属性，那么内部块的margin-top属性会绑架父元素（即父元素也会出现相应的margin-top行为）
+
+解决方案：父元素通过after伪元素与子元素隔开
+```
+#warp:before {
+    content: "";
+    display: table;
+}
+```
+
 ## 子元素浮动高度塌陷
 
-伪元素after content: '' dis
+伪元素after content: '' display: table;
 
 ## IE CSS hack
 
 类内属性前缀法 和 条件注释法
 
 用来设置不同IE版本对CSS的识别性
+
+## 盒模型相关属性默认值
+
+left top right bottom 默认值auto
+width height 默认值auto
+margin padding 默认值0
+border-width 默认值medium
+
+## 盒模型百分比属性
+
+width height百分比是相对于包含块对应的width height取百分比
+
+margin padding百分比是相对于包含块width取百分比
+
+top left百分比是相对于包含块对应的height width取百分比
 
 ## 元素垂直水平居中方案
 
@@ -423,7 +450,7 @@ margin: auto
 
 不占据空间，无法响应事件
 
-### position+z-index
+### position: absolute;+z-index : -9999;
 
 不占据空间，无法响应事件
 
@@ -442,6 +469,53 @@ margin: auto
 ### opacity:0;
 
 透明度为0，依然占据空间，可响应事件
+
+## px em rem vw vh vmin vmax
+
+px：相对于显示器屏幕分辨率
+
+em：是相对长度，相对于自身的font-size，chrome默认16px
+
+rem：是相对长度，相对于根标签的font-size
+
+vw：相对视口宽度的1%
+
+vh：相对视口高度的1%
+
+vmin：相对视口高宽中较小值的1%
+
+vmax：相对视口高宽中较大值的1%
+
+## 响应式布局方案
+
+### 媒体查询
+
+例如：
+
+```
+/* iphone6 7 8 plus */
+@media screen and (max-width: 414px) {
+    body {
+        background-color: blue;
+    }
+}
+```
+
+### 百分比布局
+
+### rem布局
+
+rem布局原理：不改变CSS像素大小，改变不同设备上所占CSS像素的个数
+
+### viewport布局
+
+viewport布局原理，改变CSS像素和物理像素的比例，不改变元素所占CSS像素的个数
+
+### vw/vh布局
+
+### flex布局
+
+### grid布局
 
 # JavaScript相关
 
@@ -1163,8 +1237,120 @@ class关键字是以ES5组合继承为基础的一个语法糖，但是它和组
 
 同源：同协议，同域名，同接口
 
+## Ajax
+
+```
+    // 手写Ajax
+    var xhr = new XMLHttpRequest()
+    xhr.open('post', 'http://localhost:3000')
+    xhr.send(obj)
+    xhr.onreadystatechange = () => {
+      // Ajax状态码
+      // 0：请求未初始化，未open
+      // 1：请求初始化未发送，open未send
+      // 2：请求已发送
+      // 3：请求正在处理
+      // 4：请求已经完成
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log(xhr.responseText)
+      }
+    }
+```
+
 ## 跨域的解决方案
 
+### 封装jsonp
+
+它不属于Ajax请求，利用script标签可以向非同源地址发送请求
+
+```
+    // 手写jsonp
+    function jsonp(configObj) {
+      const fnName = 'jsonp' + Math.random().toString().replace('.', '')
+      window[fnName] = configObj.success
+      let param = ''
+      for (const key in configObj.data) {
+        if (configObj.data.hasOwnProperty(key)) {
+          param +=`&${key}=${configObj.data[key]}`
+        }
+      }
+      const scriptNode = document.createElement('script')
+      scriptNode.src = `${configObj.url}?callback=${fnName}${param}`
+      document.body.appendChild(scriptNode)
+      scriptNode.onload = () => {
+        document.body.removeChild(scriptNode)
+      }
+    }
+```
+
+### CORS跨域资源共享
+
+#### 简单请求
+
+只要同时满足以下两个条件就属于简单请求，简单请求会跳过预检请求
+
+条件1：
+
+Method为 GET, HEAD, POST 之一
+
+条件2：
+
+Content-Type为 text/plain, multipart/form-data, application/x-www-form-urlencoded之一
+
+请求中的任意 XMLHttpRequestUpload 对象均没有注册任何事件监听器
+
+#### 预检请求
+
+```
+let express = require('express')
+let app = express()
+let whitList = ['http://localhost:3000'] //设置白名单
+app.use(function(req, res, next) {
+  let origin = req.headers.origin
+  if (whitList.includes(origin)) {
+    // 设置哪个源可以访问我
+    res.setHeader('Access-Control-Allow-Origin', origin)
+    // 允许携带哪个头访问我
+    res.setHeader('Access-Control-Allow-Headers', 'name')
+    // 允许哪个方法访问我
+    res.setHeader('Access-Control-Allow-Methods', 'PUT')
+    // 允许携带cookie
+    res.setHeader('Access-Control-Allow-Credentials', true)
+    // 预检的存活时间
+    res.setHeader('Access-Control-Max-Age', 6)
+    // 允许返回的头
+    res.setHeader('Access-Control-Expose-Headers', 'name')
+    if (req.method === 'OPTIONS') {
+      res.end() // OPTIONS请求不做任何处理
+    }
+  }
+  next()
+})
+
+```
+### postMessage()
+
+postMessage是HTML5 XMLHttRequest Level 2中的 API, 并且为数不多跨域跨域操作的window属性之一,它可用于解决以下方面的问题:
+
+1.页面和其打开的新窗口的数据传递
+
+2.多窗口之间消息传递
+
+3.页面与嵌套的iframe消息传递
+
+4.上面三个场景的跨域数据传递
+
+postMessage()方法允许来自不同源的脚本采用异步方式进行有限的通信,可以实现跨文本档,多窗口,跨域消息传递
+
+### node中间件代理
+
+![](_v_images/20200716181300173_30521.png =884x)
+
+### nginx反向代理
+
+### Websocket
+
+Websocket是HTML5的一个持久化的协议，它实现了浏览器与服务器的全双工通信，同时也是跨域的一种解决方案。WebSocket和HTTP都是应用层协议，都基于 TCP 协议。但是 WebSocket 是一种双向通信协议，在建立连接之后，WebSocket 的 server 与 client 都能主动向对方发送或接收数据。同时，WebSocket 在建立连接时需要借助 HTTP 协议，连接建立好了之后 client 与 server 之间的双向通信就与 HTTP 无关了。
 
 
 ## 浏览器内核(render进程)多线程
@@ -1369,3 +1555,149 @@ applicationCache.addEventListener("updateready", function(){
 ```
 
 # HTTP
+
+## TCP/IP五层模型
+
+![](_v_images/20200716183612303_14934.png =563x)
+
+封装过程
+![](_v_images/20200716183726302_16749.png =648x)
+
+## OSI七层模型
+
+![](_v_images/20200716194053038_16109.png =656x)
+
+## TCP三次握手
+
+第一次握手：客户端向服务端发送带有syn的数据包，此时客户端变为半打开状态，服务端接收到syn的数据包，服务端也变为半打开状态
+
+第二次握手：服务端向客户端发送带有syn/ack的数据包，客户端接收到后变为established已建立连接状态
+
+第三次握手：客户端向服务端发送带有ack的数据包，服务端收到后变为established已建立连接状态
+
+## TCP四次挥手
+
+第一次挥手：客户端数据传输完成后向服务端发送带fin的数据包，此时客户端进入半关闭状态，不再向服务端发数据，但可以接收服务端的数据
+
+第二次挥手：服务端收到带fin的数据包后，此时服务端端进入半关闭状态，不再接收客户端数据，但可以向客户端发数据，并向客户端发送带ack的确认数据包
+
+第三次挥手：服务端数据传输完成后，向客户端发送带fin的数据包
+
+第四次挥手：客户端接收到带fin的数据包后，向服务端发送带ack的确认数据包，客户端在两个最长报文寿命周期后关闭，服务端在收到ack报文后关闭
+
+## TCP的流量控制
+
+通过滑动窗口机制有效控制数据发送方的数据发送速率
+
+## TCP的拥塞控制
+
+四种算法：慢开始，快重传，快恢复，拥塞避免
+
+发送窗口的上限值应该是拥塞窗口和接收窗口之间的最小值
+
+## HTTP状态码
+
+### 1XX（信息性状态码）
+
+表示接收的请求正在处理
+
+100：继续
+
+101：切换协议，请求者要求服务器切换协议，服务器已确认并准备切换
+
+### 2XX（成功状态码）
+
+表示请求正常处理完毕
+
+200：成功
+
+204：无内容，服务器成功处理了请求，但没有返回任何内容
+
+206：部分内容，服务器成功处理了部分GET请求
+
+### 3XX（重定向状态码）
+
+表示需要进行附加操作以完成请求
+
+301：永久重定向
+
+302：临时重定向，按原有的方法请求重定向地址
+
+303：查看其他位置，用GET方法定向获取请求的资源
+
+304：未修改，自从上次请求后，请求的网页未修改过。服务器返回此响应，不会返回网页的内容
+
+307：临时重定向，不指定用什么方法请求重定向地址
+
+### 4XX（客户端错误状态码）
+
+表示服务器无法处理请求
+
+400：语法错误，请求报文存在语法错误
+
+401：未授权，未通过认证
+
+403：禁止，服务器拒绝请求
+
+404：未找到，服务器未找到指定资源
+
+405：方法禁用，禁用请求中的指定方法
+
+### 5XX（服务器错误状态码）
+
+表示服务器处理请求出错
+
+500：服务器内部错误，服务器遇到错误无法完成请求
+
+503：服务器目前不可用，超载或停机维护
+
+## Cookie和Session的区别
+
+### Cookie
+
+Cookie一般由服务器设置set-cookie，通知浏览器保存，之后浏览器每次请求都会携带cookie
+
+Cookie一般包括如下内容：
+
+1.key：设置cookie的key
+
+2.value：key对应的value
+
+3.maxAge：设置cookie过期时间
+
+4.domain：设置cookie在哪个域名中有效
+
+5.path：在哪个路径下有效
+
+6.HttpOnly：当这个值为True的时候，表示浏览器不能通过document.cookie更改Cookies的值，可以避免被xss攻击更改Cookies的值
+
+
+## TCP UDP HTTP Websocket
+
+首先TCP和UDP都是传输层的协议
+
+### TCP
+
+1.TCP是面向连接的，所以可靠性高，无丢包
+
+2.因为TCP是面向连接的，所以会有延时，实时性较差
+
+3.TCP首部开销20字节，开销大
+
+4.TCP连接只能点到点
+
+使用场景：一般用于文件传输，电子邮件，远程终端接入这类对数据准确性要求高，有连接需求的场景
+
+### UDP
+
+1.UDP是面向非连接的，所以可靠性差，可能有丢包
+
+2.因为UDP是面向非连接的，无连接时间，所以实时性好
+
+3.UDP首部开销8字节，开销小
+
+4.UDP支持一对一，一对多，多对一，多对多相互通信
+
+使用场景：一般用于即时通信，流式多媒体通信这种对于实时性要求较高，对丢包要求较低的场景
+
+
