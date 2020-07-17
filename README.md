@@ -1861,11 +1861,6 @@ Cookie可以设置过期时间长时间存储，而Session在客户端关闭或S
 7.域支持范围不同：
 Cookie可通过设置Domain跨子域访问，Session不支持跨域名访问
 
-
-
-
-### 存放位置不同
-
 ## TCP UDP HTTP Websocket
 
 首先TCP和UDP都是传输层的协议
