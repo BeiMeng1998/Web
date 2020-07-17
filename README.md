@@ -1,5 +1,5 @@
 # HTML
-<a url='HTTP'>aaa<a>
+
 ## HTML和XHTML有什么区别
 
 HTML(HyperText Markup Language)超文本标记语言
@@ -220,7 +220,7 @@ CSS来源分三种：开发人员 用户(Internet选项-辅助功能-用户样�
 
 ### 3.顺序排序
 
-如果选择器特殊性相同则按照顺序排序
+如果选择器特殊性相同则按照顺序排序，新声明覆盖旧声明
 
 ## BFC(Block formatting context)
 
@@ -361,7 +361,7 @@ body {
 
 当两个空的块级元素嵌套时，如果内部块设置有margin-top属性，那么内部块的margin-top属性会绑架父元素（即父元素也会出现相应的margin-top行为）
 
-解决方案：父元素通过after伪元素与子元素隔开
+解决方案：父元素通过before伪元素与子元素隔开
 ```
 #warp:before {
     content: "";
@@ -872,6 +872,8 @@ IE8及以下可使用attachEvent()来给元素同一事件绑定多个监听
 
 ### 释放内存
 
+栈内存使用一级缓存，堆内存使用二级缓存
+
 1.局部变量：函数执行完自动释放
 
 2.对象：称为垃圾对象（无变量引用 ） => 垃圾回收机制回收
@@ -899,15 +901,15 @@ B.a = A
 A, B二个对象的堆内存的引用次数均为2，会一直存在于内存中
 解决：赋值为null，不再引用
 
+IE9把DOM和BOM转换成真正的JS对象了，所以避免了这个问题。
+
 ## 原型与原型链
 
 ### 显式原型与隐式原型
 
-每个函数对象都有 prototype，它默认指向一个Object实例对象，即 显式原型
+每个函数对象都有 prototype，它默认指向一个 Object 实例对象，即 显式原型 prototype
 
-prototype
-
-每个实例对象都有__proto__，即隐式原型，__proto__指向其构造函数的 prototype
+每个实例对象都有__proto__，即隐式原型，__proto__ 指向其构造函数的 prototype
 
 ### 原型链
 
@@ -973,7 +975,7 @@ function 提前声明且定义，添加为函数执行上下文的方法
 
 3.在函数执行上下文创建后，将其压栈
 
-4.在当前函数执行完后，将栈顶出栈
+4.在当前函数执行完后，将栈顶出栈，仍然在内存中，等待垃圾回收机制回收
 
 5.所有代码执行完后，栈中只剩window
 
@@ -1075,13 +1077,13 @@ JavaScript采用的是词法作用域（静态作用域）
 
 特点：
 
-拥有块级作用域
+1.拥有块级作用域
 
-不能重复声明
+2.不能重复声明
 
-没有预解析，存在暂时性死区
+3.没有预解析，存在暂时性死区
 
-全局声明不会称为window的属性
+4.全局声明不会成为window的属性
 
 ### const
 
@@ -1089,15 +1091,15 @@ JavaScript采用的是词法作用域（静态作用域）
 
 特点：
 
-不能修改
+1.不能修改
 
-拥有块级作用域
+2.拥有块级作用域
 
-不能重复声明
+3.不能重复声明
 
-没有预解析，存在暂时性死区
+4.没有预解析，存在暂时性死区
 
-全局声明不会称为window的属性
+5.全局声明不会成为window的属性
 
 ## ...三点运算符
 
@@ -1110,13 +1112,6 @@ JavaScript采用的是词法作用域（静态作用域）
 ### 浅拷贝
 
 拷贝指针，修改拷贝后的数据会影响原数据，使得原数据不安全
-
-常见的浅拷贝如：
-Array方法的slice，concat
-
-Object方法的assign
-
-以及...扩展运算符都是浅拷贝
 
 ### 深拷贝
 
@@ -1171,9 +1166,15 @@ A instanceof B
 
 ### Array.isArray(param)
 
+## 数组去重
+
+### 两层for循环
+
+
+
 ## 判断一个对象是否是空对象
 
-`String(obj) === '[object Object] && Reflect.ownKeys(obj).length === 0'`
+`String(obj) === '[object Object]' && Reflect.ownKeys(obj).length === 0`
 
 Reflect.ownKeys() 为 Object.getOwnPropertyNames() 与 Object.getOwnPropertySymbols() 二者 concat() 之后的数组
 
@@ -1182,6 +1183,7 @@ Reflect.ownKeys() 为 Object.getOwnPropertyNames() 与 Object.getOwnPropertySymb
 ### super关键字
 
 super是指向当前对象的原型的一个指针，实际上就是Object.getPrototypeOf(this)的值
+
 super在函数简写写法内才有效，否则会报错
 
 ```
@@ -1229,6 +1231,40 @@ class关键字是以ES5组合继承为基础的一个语法糖，但是它和组
 
 6.在类的方法内部尝试重写类名会报错
 
+## Promise
+
+### 什么是Promise
+
+Promise是ES6新增的对于JS异步编程的一种新的解决方案，可以解决回调地狱问题
+
+从语法上来说：Promise是一个构造函数
+
+从功能上来说：Promise实例用来封装异步操作，并可获取其结果
+
+### Promise的三种状态
+
+Pending初始化状态，fulfilled成功状态，rejected失败状态
+
+### Promise的API
+
+Promise.resolve()：返回一个成功状态的promise
+
+Promise.reject()：返回一个失败状态的promise
+
+Promise.all()：多个 Promise 任务同时执行。如果全部成功执行，则以数组的方式返回所有 Promise 任务的执行结果。 如果有一个 Promise 任务 rejected，则只返回 rejected 任务的结果。
+
+Promise.race()：多个 Promise 任务同时执行，返回最先执行结束的 Promise 任务的结果，不管这个 Promise 结果是成功还是失败
+
+Promise.prototype.then()：注册回调
+
+Promise.prototype.catch()：捕获异常
+
+### 如何让Promise.all()在抛出异常后依然有效?
+
+将传入 Promise.all 的数组进行遍历，如果 catch 住 reject 结果，直接返回，这样就可以在最后结果中将所有结果都获取到
+
+ES11：Promise.settled()
+
 # Web相关
 
 ## 同源政策
@@ -1266,12 +1302,13 @@ class关键字是以ES5组合继承为基础的一个语法糖，但是它和组
 ```
     // 手写jsonp
     function jsonp(configObj) {
-      const fnName = 'jsonp' + Math.random().toString().replace('.', '')
+      const fnName = configObj.callback + Math.random().toString().replace('.', '')
+      const data = configObj.data
       window[fnName] = configObj.success
       let param = ''
-      for (const key in configObj.data) {
-        if (configObj.data.hasOwnProperty(key)) {
-          param +=`&${key}=${configObj.data[key]}`
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          param +=`&${key}=${data[key]}`
         }
       }
       const scriptNode = document.createElement('script')
@@ -1304,10 +1341,10 @@ Content-Type为 text/plain, multipart/form-data, application/x-www-form-urlencod
 ```
 let express = require('express')
 let app = express()
-let whitList = ['http://localhost:3000'] //设置白名单
+let whiteList = ['http://localhost:3000'] //设置白名单
 app.use(function(req, res, next) {
   let origin = req.headers.origin
-  if (whitList.includes(origin)) {
+  if (whiteList.includes(origin)) {
     // 设置哪个源可以访问我
     res.setHeader('Access-Control-Allow-Origin', origin)
     // 允许携带哪个头访问我
@@ -1397,19 +1434,17 @@ CSS的加载会阻塞渲染
 
 #### 重绘回流与硬件加速
 
-标准文档流以及position为absolute，fixed都属于默认复合层
-
 元素的位置的改变会引起回流和重绘，元素样式改变会引起重绘，影响浏览器性能
 
 因为GPU是专门为处理图形而设计，所以它在速度和能耗上更有效率。
 
-通过GPU硬件加速的方式（transform、opacity、filters），声明一个新的复合图层，它会单独分配资源，这样就不会影响默认复合图层，从而避免重绘与回流
+通过GPU硬件加速的方式（transform、opacity、filters），声明一个新的复合图层，它会单独分配资源，这样就不会影响默认复合图层(标准文档流以及position为absolute，fixed都属于默认复合层)，从而避免重绘与回流
 
 注意:如果a是一个复合图层，而且b在a上面，那么b也会被隐式转为一个复合图层
 
 在GPU渲染字体会导致抗锯齿无效。这是因为GPU和CPU的算法不同。因此如果你不在动画结束的时候关闭硬件加速，会产生字体模糊。
 
-### 分线程
+### Web API分线程
 
 #### 定时器管理线程
 #### DOM事件响应线程
@@ -1421,7 +1456,7 @@ CSS的加载会阻塞渲染
 
 由于HTTP是无状态协议，Cookies的出现是为了保存HTTP状态
 
-服务器发送请求set-cookie之后，浏览器保存Cookies之后浏览器的每次HTTP请求都会携带Cookies的信息
+服务器发送请求set-cookie，浏览器保存Cookies之后浏览器的每次HTTP请求都会携带Cookies的信息
 
 JS也可通过document.cookie读取和设置
 
@@ -1462,7 +1497,7 @@ LocalStorage的特点：
 
 ### SessionStorage
 
-H5新增的本次存储方案
+H5新增的本地存储方案
 
 与LocalStorage相比，只用于当前浏览器的一次会话，浏览器关闭，数据清空
 
@@ -1507,7 +1542,7 @@ IndexedDB的特点：
 
 第一次访问时，浏览器会根据manifest文件上的离线存储资源清单进行本地缓存，
 
-之后的访问，浏览器会比较manifest文件是否修改
+之后的每次在线访问，浏览器会比较manifest文件是否修改
 
 如果未修改，则浏览器直接调用离线缓存无需再发送请求
 
@@ -1553,6 +1588,124 @@ applicationCache.addEventListener("updateready", function(){
     location.reload();    //重新加载页面页面
 },true);
 ```
+
+## 强制缓存与协商缓存
+
+浏览器缓存主要分为 memory cache 内存缓存 和 disk cache 磁盘缓存
+
+memory cach： 读取高效，但缓存持续性短，会随着进程的释放而释放，一旦关闭tab页面，内存中的缓存就被释放了
+
+disk cache：读取比 memory cach 慢，但缓存保存在磁盘中。在所有浏览器缓存中，disk cache 覆盖面最大。
+
+### 强制缓存
+
+强制缓存不会向服务器发送请求，直接从缓存中读取资源
+
+#### Expires (HTTP/1.0)
+
+设置缓存文件过期时间，当缓存文件过期需要向服务器再次请求
+
+`Expires: Wed, 25 Sep 2019 08:13:53 GMT`
+
+Expires 是HTTP/1.0的产物，受制于本地时间，如果修改了本地时间可能会造成缓存失效
+
+#### Cache-Control (HTTP/1.1)
+
+Cache-Control是HTTP/1.1的产物，若 Expires 和 Cache-Control 同时存在，Cache-Control 的优先级更高
+
+`Cache-Control: max-age=60`
+max-age表示缓存文件过期时间，过期需要重新请求
+
+`Cache-Control: s-maxage=60`
+s-maxage只在proxy代理缓存中有效，优先级高于 Expires 和 Cache-Control: max-age
+
+`Cache-Control: public`
+public表示该资源为公共资源，可以被缓存在任何可以被缓存的地方（CDN，中间代理服务器，浏览器等等），可多用户共享
+
+`Cache-Control: private`
+private表示该资源为私有资源，只可以被浏览器缓存
+
+`Cache-Control: no-store`
+no-store表示浏览器每次都从服务器拿资源
+
+`Cache-Control: no-cache`
+no-cache表示并不是不缓存，而是客户端缓存内容，但用不用由协商缓存决定
+
+`Cache-Control: max-stale=60`
+max-stale表示容忍最大过期时间
+
+`Cache-Control: min-fresh=60`
+min-fresh表示容忍的最小新鲜度，如60，表示希望60s内获得新的响应
+
+### 协商缓存
+
+协商缓存是在强制缓存失效后，浏览器携带缓存标识向服务器发送请求，由服务器根据缓存标识确定是否使用缓存的过程
+
+主要有两种结果：
+1.协商缓存生效，返回304，使用缓存
+
+2.协商缓存失败，返回200和请求数据，不使用缓存
+
+#### Last-Modified/If-Modified-Since (HTTP/1.0)
+
+当浏览器第一次请求资源时，服务器返回资源的同时，在 Response Header 中会有一个 Last-Modified 的 Header，Header值是这个资源在服务器上最后修改的时间
+
+当浏览器下次请求该资源时，在 Requset Header 中会有一个 If-Modified-Since 的 Header，Header值为上次响应的 Last-Modified 的值
+
+服务器再次收到对该资源的请求，会将 If-Modified-Since 的 Header值与该资源最后修改时间进行对比，若无变化，则响应304和Not Modified，直接从缓存中读取，若有变化，则响应200并返回新的资源
+
+但是Last-Modified存在两个弊端
+
+1.若在本地打开缓存文件，即使没有对缓存文件进行修改，也还是会造成 Last-Modified 的值被修改，服务器不能命中缓存，导致发送相同的资源
+
+2.因为 Last-Modified 只能以秒计时，若在1s内做出对文件的修改，那么服务器会认为缓存命中，不会返回新的资源
+
+既然根据修改时间来决定是否缓存尚有不足，那么可以使用HTTP/1.1的 Etag/If-None-Match 根据文件内容来判断
+
+#### Etag/If-None-Match (HTTP/1.1)
+
+Etag是服务器响应请求时，返回当前资源文件的一个唯一标识，由服务器生成，只要资源有变化，Etag就会重新生成
+
+浏览器在下一次向服务器请求资源时，会将服务器上次返回的 Etag 值放到 Request Header 的 If-None-Match 里
+
+服务器只需要比较 Etag 值是否一致，就能很好地判断资源相对于客户端是不是已经更新过了
+
+如果 Etag 值不匹配，则以常规GET 200回包形式，将新的资源和新的 Etag 响应给客户端
+
+如果 Etag 值匹配，则响应304，客户端直接使用本地缓存
+
+#### 两种方法对比
+
+1.首先在精度和优先级上 Etag 高于 Last-Modified
+
+2.性能上 Etag 逊于 Last-Modified，毕竟一个 Last-Modified 只需要记录时间，而 Etag 要根据算法算出 Hash
+
+### 缓存机制
+
+强制缓存优先于协商缓存进行，若强制缓存失效，则进行协商缓存，协商缓存由服务器决定是否使用缓存
+
+协商缓存成功，响应304直接使用缓存
+
+协商缓存失败，返回200和请求的资源
+
+
+### 用户行为对缓存策略的影响
+
+1.打开网页，地址栏输入地址：查找 disk cache 中是否有匹配，有则使用，没有则发送网络请求
+
+2.普通刷新F5：因为Tab并没有关闭，所以优先从 memory cache 中加载，其次是 disk cache
+
+3.强制刷新Ctrl+F5：浏览器不使用缓存，请求为Cache-Contrl: no-cache，Pragma: no-cache，服务器直接返回200和最新内容
+
+
+## 详述输入URL到页面渲染的过程
+
+DNS域名解析  >>> TCP分包 >>> IP寻路 >>> 找到服务器IP >>> TCP三次握手建立连接 >>> 数据传输 >>> TCP四次挥手断开连接 >>>
+
+浏览器解析数据 >>> GUI渲染线程 >>> 解析构建DOM树 >>> 解析构建CSSOM >>> 构建Render树 >>> 布局Render树（回流）>>>
+
+绘制Render树（重绘）>>> 将各层信息传给GPU进程，渲染显示到页面
+
 
 # HTTP
 
@@ -1655,22 +1808,63 @@ applicationCache.addEventListener("updateready", function(){
 
 ### Cookie
 
-Cookie一般由服务器设置set-cookie，通知浏览器保存，之后浏览器每次请求都会携带cookie
+Cookie是为了解决HTTP协议无状态的特点所作出的努力
+
+浏览器第一次发送请求时，服务器设置set-cookie响应，通知浏览器保存Cookie，之后同一域名下的每次请求都会携带cookie
 
 Cookie一般包括如下内容：
 
-1.key：设置cookie的key
+1.Key：设置Cookie的key
 
-2.value：key对应的value
+2.Value：key对应的value
 
-3.maxAge：设置cookie过期时间
+3.Expires：设置过期时间，如果没有设置，则Cookie为会话期Cookie
 
-4.domain：设置cookie在哪个域名中有效
+3.Max-Age：设置Cookie过期时间，权重比Expires高
 
-5.path：在哪个路径下有效
+4.Domain：设置Cookie在哪个域名中有效，如果没有设置，则为当前域名不含子域名，若设置，则自动包含子域名
 
-6.HttpOnly：当这个值为True的时候，表示浏览器不能通过document.cookie更改Cookies的值，可以避免被xss攻击更改Cookies的值
+5.Path：在哪个路径下有效，包含子目录
 
+6.HttpOnly：当这个值为True的时候，表示浏览器不能通过document.cookie更改Cookie的值，可以避免被XSS攻击更改Cookie的值
+
+7.Secure：当这个值为True的时候，Cookie在HTTP中无效，在HTTPS中有效
+
+8.SameSite：规定浏览器不能在跨域请求中携带Cookie，减少CSRF攻击
+
+### Session
+
+Session是存在服务器的一种 用来存放用户数据的类HashTable结构。
+
+浏览器第一次发送请求时，服务器自动生成了一HashTable和一SessionID来唯一标识这个HashTable，并将其通过响应发送到浏览器。浏览器第二次发送请求会将前一次服务器响应中的SessionID放在请求中一并发送到服务器上，服务器从请求中提取出SessionID，并和保存的所有Session ID进行对比，找到这个用户对应的HashTable。
+
+### 二者区别
+
+1.存储位置不同：
+Cookie存在在客户端，Session存放在服务端
+
+2.安全性不同：
+Cookie存放在客户端，安全性较低，Session存放在服务器，安全性较高
+
+3.对服务器压力不同：
+Cookie存放在客户端，对服务器无压力，Session存放在服务器，每个用户都会生成一个Session，Session过多消耗服务器资源
+
+4.存储数据类型不同：
+Cookie只支持ASCII字符串，并需要编码方式存储为Unicode或二进制数据，而Session支持任意类型数据
+
+5.存储大小不同：
+单个Cookie容量4KB，而Session大小没有限制（但为了服务器性能考虑，也不宜存放过多数据）
+
+6.存储有效期不同：
+Cookie可以设置过期时间长时间存储，而Session在客户端关闭或Session超时都会失效，但如果Cookie不设置过期时间，那Cookie为会话期Cookie
+
+7.域支持范围不同：
+Cookie可通过设置Domain跨子域访问，Session不支持跨域名访问
+
+
+
+
+### 存放位置不同
 
 ## TCP UDP HTTP Websocket
 
