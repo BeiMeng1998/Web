@@ -150,6 +150,26 @@ big，center，font, s...
 
 frame，frameset，noframes
 
+## shadow dom是什么
+
+shadow dom是浏览器渲染dom树时，插入的一个并不在主dom树上的dom元素子树
+
+在开发者工具的设置中开启 show user agent shadow DOM就可以看到shadow dom的结构
+
+影子树是对一些技术实现的封装，比如以video为寄生宿主的影子树构建了播放器
+
+这也就是为什么我们只加一个video标签就能够看到整个播放器的原因
+
+我们可以对影子树进行操作，修改其样式等
+
+## SVG和Canvas的区别
+
+SVG和Canvas都是2D作图
+
+SVG是矢量图，不受分辨率影响，缩小放大不失真
+
+Canvas是位图，逐像素渲染，受分辨率影响，放大会失真
+
 # CSS相关
 
 ## 两种盒模型
@@ -161,6 +181,22 @@ IE盒模型的width和height是border-box
 W3C标准盒模型的width和height是content-box
 
 box-sizing: border-box; 将W3C盒模型转为IE盒模型
+
+## 列举几个css中可继承和不可继承的属性
+
+可继承：font, font-size, font-family, font-weight, font-style, text-indent, text-align, line-hight, word-spacing, color, visibility
+
+不可继承：display, width, height, margin, padding, border, background, position, float, top, left, bottom, right
+
+## 伪类和伪元素的区别
+
+伪类主要是为了选中元素的某种特殊状态，伪类用单冒号
+
+伪元素主要是为了创建DOM树以外的元素，伪元素用双冒号
+
+## CSS filter
+
+元素的滤镜或者说是元素的可视效果，如模糊程度，饱和度，透明度等等
 
 ## CSS选择器
 
@@ -716,7 +752,7 @@ call和apply改变了函数的this上下文后便执行该函数,而bind则是�
 
 call和apply之间的差别在于参数的区别，call和apply的第一个参数都是要改变上下文的对象，
 
-而call从第二个参数开始以参数列表的形式展现，apply则是将参数放在一个数组里面作为它的第二个参数。
+而call从第二个参数开始以参数列表的形式展现，apply则是将参数放在一个数组或类数组里面作为它的第二个参数。
 
 ## new的执行过程
 
@@ -1168,8 +1204,21 @@ A instanceof B
 
 ## 数组去重
 
-### 两层for循环
+```
+      for (let i = 0; i < arr.length; i++) {
+        if (arr.indexOf(arr[i]) !== i) {
+          arr.splice(i, 1)
+          i--
+        }
+      }
+      return arr
+```
 
+`Array.from(new Set(arr))`
+
+`arr.filter((item, index, arr) => arr.indexOf(item) === index)`
+
+`arr.reduce((prev, cur) => prev.includes(cur) ? prev : [...prev, cur], [])`
 
 
 ## 判断一个对象是否是空对象
@@ -1177,6 +1226,18 @@ A instanceof B
 `String(obj) === '[object Object]' && Reflect.ownKeys(obj).length === 0`
 
 Reflect.ownKeys() 为 Object.getOwnPropertyNames() 与 Object.getOwnPropertySymbols() 二者 concat() 之后的数组
+
+## 伪数组转数组
+
+### `[...param]`(有限)
+
+拥有可迭代属性接口，也就是 Symbol.iterator 的伪数组对象（如arguments,  NodeList,  HTMLCollection）才可用
+
+对于自定义的伪数组，若没有添加 Symbol.iterator 则会报错
+
+### Array.prototype.slice.call(param)
+
+### Array.from(param)
 
 ## super关键字 与 super()
 
@@ -1264,6 +1325,20 @@ Promise.prototype.catch()：捕获异常
 将传入 Promise.all 的数组进行遍历，如果 catch 住 reject 结果，直接返回，这样就可以在最后结果中将所有结果都获取到
 
 ES11：Promise.settled()
+
+## 简述箭头函数
+
+1.箭头函数本身没有this，箭头函数的this继承的是外部函数的this
+
+2.箭头函数没有prototype
+
+3.箭头函数不能用super(super关键字是对象原型的指针，且只能用在对象的简写方法中)
+
+4.箭头函数没有construct内部方法，不能用new调用
+
+什么时候使用箭头函数？
+
+当函数非对象的方法且不用做构造函数时，使用箭头函数
 
 # Web相关
 
@@ -1706,6 +1781,68 @@ DNS域名解析  >>> TCP分包 >>> IP寻路 >>> 找到服务器IP >>> TCP三次�
 
 绘制Render树（重绘）>>> 将各层信息传给GPU进程，渲染显示到页面
 
+## 如何实现SEO优化
+
+1.对网站的标题，关键字，描述精心设计
+
+2.使用H5语义化标签
+
+3.减少HTTP请求数量
+
+4.利用浏览器缓存
+
+5.减少重绘重排
+
+## 详述回流和重绘优化
+
+当对DOM元素的大小位置进行改动时，会发生回流，回流一定重绘
+
+当对DOM元素的样式进行改动时，会发生重绘，重绘不一定回流
+
+优化：减少对DOM元素的操作，可以将元素移除DOM树再变更，或者利用GPU硬件加速，构建新的复合层
+
+## 防抖和节流
+
+### 函数防抖
+
+什么是函数防抖？事件在触发N秒后执行回调，如果在N秒内又被触发，则重新计时
+
+```
+    var timer = null
+    var delay = 1000
+    btn.onclick = () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        console.log('====================================');
+        console.log('防抖');
+        console.log('====================================');
+      }, delay);
+    }
+```
+
+### 函数节流
+
+什么是函数节流？事件在触发N秒后执行回调，在N秒内再次触发无效
+
+```
+    var timer = null
+    var delay = 1000
+    var last = 0
+    var now = null
+    btn.onclick = () => {
+      now = +new Date()
+      if (now - last > delay) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          last = now
+          console.log('====================================');
+          console.log('节流');
+          console.log('====================================');
+        }, delay);
+      }
+      last = now
+    }
+```
 
 # HTTP
 
