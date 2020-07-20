@@ -2078,5 +2078,216 @@ Cookie可通过设置Domain跨子域访问，Session不支持跨域名访问
 
 4.高效
 
+# 算法相关
 
+## 8大排序算法
+
+```
+    const array = [7, 8, 6, 6, 6, 4, 5, 2, 3, 1]
+
+    // 1.冒泡排序：相邻两个元素相比较，若a > b则交换顺序，使得最大的元素冒泡到最顶端 时间复杂度 n²
+    function bubble(array) {
+      for (let i = 0; i < array.length - 1; i++) {
+        for (let j = 0; j < array.length - 1 - i; j++) {
+          if (array[j] > array[j + 1]) {
+            const temp = array[j]
+            array[j] = array[j + 1]
+            array[j + 1] = temp
+          }
+        }
+      }
+      console.log('====================================');
+      console.log('bubble', array);
+      console.log('====================================');
+    }
+    // bubble(array)
+
+    // 2.选择排序：每次循环默认首元素为最小元素，通过依次比较寻找最小元素的下标，最后将首元素与最小元素替换 时间复杂度 n²
+    function select(array) {
+      for (let i = 0; i < array.length - 1; i++) {
+        let minIndex = i
+        for (let j = i; j < array.length; j++) {
+          if (array[minIndex] > array[j]) {
+            minIndex = j
+          }
+        }
+        if (minIndex !== i) {
+          const temp = array[minIndex]
+          array[minIndex] = array[i]
+          array[i] = temp
+        }
+      }
+      console.log('====================================');
+      console.log('select', array);
+      console.log('====================================');
+    }
+    // select(array)
+
+    // 3.插入排序：每次将一个新元素插入到有序表中，得到一个length+1新的有序表 时间复杂度 n²
+    function insert(array) {
+      for (let i = 1; i < array.length; i++) {
+        // 要插入的牌
+        let key = array[i]
+        // 有序表最大下标
+        let j = i - 1
+        // 要插入的牌和有序表的牌比，找到自己的位置
+        while (j >= 0 && key < array[j]) {
+          // length + 1
+          array[j + 1] = array[j]
+          j--
+        }
+        array[j + 1] = key
+      }
+      console.log('====================================');
+      console.log('insert', array);
+      console.log('====================================');
+    }
+    // insert(array)
+
+    // 4.快速排序：先通过一趟排序将序列排列成左右两部分，左部分均比右部分小，再分别对左右两部分进行排序，直到有序 时间复杂度 nlogn
+    function partition(array, low, high) {
+      // 基准值
+      const key = array[low]
+      while (low < high) {
+        // 在右边寻找比基准值小的数
+        while (low < high && key <= array[high]) {
+          high--
+        }
+        // 比基准值小的数移到左边
+        array[low] = array[high]
+        // 在左边寻找比基准值大的数
+        while (low < high && key >= array[low]) {
+          low++
+        }
+        // 比基准值大的数移到右边
+        array[high] = array[low]
+      }
+      // 基准值排序后的正确位置确定
+      array[low] = key
+      // 输出基准值的正确位置
+      return low
+    }
+
+    function quick(array, low, high) {
+      if (high <= low) {
+        return
+      }
+      const keyIndex = partition(array, low, high)
+      // 比基准值小的左边进行递归快排
+      quick(array, low, keyIndex - 1)
+      // 比基准值小的右边进行递归快排
+      quick(array, keyIndex + 1, high)
+    }
+    // quick(array, 0, array.length-1)
+
+    // 5.堆排序：1.构造大顶堆 2.堆顶元素与末尾元素互换，最大元素沉底 3.调整顶堆 23232323重复 时间复杂度 nlogn
+    function heapAdjust(array, current, size) {
+      // 取出当前节点
+      const key = array[current]
+      // 从当前节点的左子开始
+      let left = 2 * current + 1
+      for (left; left < size; left = 2 * left + 1) {
+        // 找出两子中较大的一个
+        if (left + 1 < size && array[left] < array[left + 1]) {
+          left++
+        }
+        // 如果子大于父节点，则父子交换
+        if (array[left] > key) {
+          array[current] = array[left]
+          current = left
+          array[left] = key
+        } else break
+      }
+    }
+
+    function heap(array, size) {
+      // 构建初始大顶堆，从最后一个非叶子节点开始
+      for (let left = parseInt(size / 2 - 1); left >= 0; left--) {
+        // 调整顶堆
+        heapAdjust(array, left, size)
+      }
+      // 取堆顶并调整
+      for (let nextSize = size - 1; nextSize > 0; nextSize--) {
+        const temp = array[0]
+        array[0] = array[nextSize]
+        array[nextSize] = temp
+        heapAdjust(array, 0, nextSize)
+      }
+    }
+    // heap(array, array.length)
+
+    // 6.希尔排序：将序列分为gap组，对每组直接使用插排
+    // gap/2，反复执行，当gap为1时，为同一组，使用插排，时间复杂度 nlogn
+    function shell(array) {
+      for (let gap = parseInt(array.length / 2); gap > 0; gap = parseInt(gap / 2)) {
+        for (let i = gap; i < array.length; i++) {
+          // 要插入的牌的下标为j
+          // 序列最大下标为j-gap
+          let j = i
+          while (j - gap >= 0 && array[j] < array[j - gap]) {
+            const temp = array[j]
+            array[j] = array[j -gap]
+            array[j -gap] = temp
+            j -= gap
+          }
+        }
+      }
+      console.log('====================================');
+      console.log(array);
+      console.log('====================================');
+    }
+    // shell(array)
+
+    // 7.归并排序：将数组分为左右两组分别排序再合并 时间复杂度 nlogn
+    function merge(leftArr, rightArr) {
+      const result = []
+      while (leftArr.length > 0 && rightArr.length > 0) {
+        if (leftArr[0] < rightArr[0]) {
+          result.push(leftArr.shift())
+        } else {
+          result.push(rightArr.shift())
+        }
+      }
+      return result.concat(leftArr).concat(rightArr)
+    }
+    function merge_sort(array) {
+      const length = array.length
+      if (length === 1) {
+        return array
+      }
+      const mid = parseInt(length / 2)
+      const leftArr = array.slice(0, mid)
+      const rightArr = array.slice(mid)
+      return merge(merge_sort(leftArr), merge_sort(rightArr))
+    }
+    // const mergeArr = merge_sort(array)
+    // console.log('====================================');
+    // console.log(mergeArr);
+    // console.log('====================================');
+
+    // 8.计数排序：通过额外的数组countArr记录待排序数组中各元素的个数，countArr的索引为待排序数组的值 时间复杂度 n + k
+    function count(array) {
+      // 获取待排序数组的最大值，也就是新建数组countArr的最大索引
+      let max = array[0]
+      for (let i = 1; i < array.length; i++) {
+        max = array[0] > array[i] ? array[0] : array[i]
+      }
+      const countArr = new Array(max + 2).fill(0)
+
+      for (let i = 0; i < array.length; i++) {
+        countArr[array[i]]++
+      }
+      let index = 0
+      for (let i = 0; i <= max + 1; i++) {
+        for(let j = 0; j < countArr[i]; j++){
+          array[index++] = i
+        } 
+      }
+      console.log('====================================');
+      console.log(array);
+      console.log('====================================');
+      
+    }
+    // count(array)
+```
 
