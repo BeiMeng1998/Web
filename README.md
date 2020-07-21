@@ -324,7 +324,9 @@ CSS来源分三种：开发人员 用户(Internet选项-辅助功能-用户样�
 
 中间列用warp包裹
 
-wrap的width: 100%;
+wrap的width: 100%
+
+三列全部浮动，内容区清除浮动
 
 左列margin-left: -100%; 将左列提升到上一行最左侧
 
@@ -332,7 +334,7 @@ wrap的width: 100%;
 
 中间列padding: 0 200px; 为左右两列留出空间
 
-与圣杯布局的区别是不使用float和定位
+与圣杯布局的区别是不使用定位
 
 ### flex布局
 
@@ -813,6 +815,8 @@ createElement() createTextNode()
 父节点.appendChild(子节点)
 
 父节点.insertBefore(新节点, 旧节点)
+
+createDocumentFragment()文档片段
 
 ### 改
 
@@ -1343,6 +1347,56 @@ ES11：Promise.settled()
 什么时候使用箭头函数？
 
 当函数非对象的方法且不用做构造函数时，使用箭头函数
+
+## for in 和 for of 和 Object.keys()的区别
+
+### for in
+
+1.for in遍历对象以及原型链上的可枚举属性
+
+2.如果用于遍历数组，除了遍历其元素外，还会遍历数组对象自定义的可枚举属性及其原型链上的可枚举属性
+
+3.遍历对象返回的属性名和遍历数组返回的索引都是 string 类型
+
+### for of
+
+1.for of遍历可迭代对象（String, Array, Map, Set, arguments, HTMLCollection, Nodelist）
+
+2.遍历数组后输出的结果为元素的值，而非索引
+
+```
+// 如果要遍历对象，可与 Object.keys 配合
+var person = {
+    name: 'June',
+    age: 17,
+    city: 'guangzhou'
+}
+for(var key of Object.keys(person)) {
+    console.log(person[key]); // June, 17, guangzhou
+}
+
+// 配合 entries 输出数组索引和值/对象的键值
+var arr = ['a', 'b', 'c'];
+for(let [index, value] of Object.entries(arr)) {
+    console.log(index, ':', value);
+    // 0:a, 1:b, 2:c
+}
+var obj = {name: 'June', age: 17, city: 'guangzhou'};
+for(let [key, value] of Object.entries(obj)) {
+    console.log(key, ':', value);
+    // name:June,age:17,city:guangzhou
+}
+```
+
+### Object.keys()
+
+1.返回对象自身可枚举属性组成的数组
+
+2.不会遍历对象原型链上的属性以及 Symbol 属性
+
+3.如果用于遍历数组，除了遍历其元素外，还会遍历数组对象自定义的可枚举属性
+
+4.遍历对象返回的属性名和遍历数组返回的索引都是 string 类型
 
 # Web相关
 
@@ -2076,7 +2130,46 @@ Cookie可通过设置Domain跨子域访问，Session不支持跨域名访问
 
 3.支持客户端和服务端渲染
 
-4.高效
+4.高效：原因在于虚拟DOM和Diff算法
+
+## 虚拟DOM与Diff算法
+
+虚拟DOM本质上是一个轻量的JavaScript对象，它是真实DOM的一个副本
+
+在setState之后创建新的虚拟DOM树，与旧的虚拟DOM树通过Diff算法进行比较
+
+多次setState合并操作，记录比较差异，最终将差异绘制到真实DOM，进行局部更新
+
+## Diff算法比对思路（在shouldComponentUpdate默认为true，未使用key的情况下）
+
+逐层对树节点进行比对
+
+![](_v_images/20200721161919639_22038.png =640x)
+通过比对移除2节点下的5，在3节点下新增5
+
+![](_v_images/20200721162203303_1206.png =640x)
+若认为只需在2下移除4就错了，diff算法会依次比较兄弟节点，所以应该是2节点下移除4增加5，移除5增加6，移除6
+
+这里就体现出key的作用了，若每个组件没有唯一key，则对于5，6两个组件会重新渲染造成性能浪费
+
+若每个组件都有唯一ID，则只需在2下移除4
+
+若有1000个兄弟节点，在没有key的情况下，你只删除第一个兄弟节点，会造成之后999个节点的重新渲染
+
+![](_v_images/20200721162948694_13975.png =640x)
+对于跨层级移动DOM，移除2，同时包括移除2下4，5，增加3，同时包括增加3下2，2下3，4，移除3
+
+可以看到当一个父节点变化时，其下子节点会全部重新渲染
+
+优化：
+组件生命周期setState之后，组件本身会进入shouldComponentUpdate()，默认为true，即使没有数据修改，也会render
+
+对于父组件下的子组件，只比父组件多一个componentWillReceiveProps，后面与父组件相同
+
+1.可主动修改此函数，判断新旧数据是否改变，改变返回true，更新组件，否则返回false，不更新组件
+
+2.使用pureComponent纯组件
+纯组件重写了shouldComponentUpdate()，对组件的新/旧state和props中的数据进行浅比较, 如果都没有变化, 返回false, 否则返回true
 
 # 算法相关
 
