@@ -332,7 +332,7 @@ wrap的width: 100%
 
 右列margin-left: -200px; 将右列提升到上一行最右侧
 
-中间列padding: 0 200px; 为左右两列留出空间
+中间wrap padding: 0 200px; 为左右两列留出空间
 
 与圣杯布局的区别是不使用定位
 
@@ -555,6 +555,33 @@ viewport布局原理，改变CSS像素和物理像素的比例，不改变元素
 
 ### grid布局
 
+## CSS画底为40px高为40px的等腰三角形
+
+```
+#test {
+    width: 0px;
+    height: 0px;
+    border-width: 40px 20px;
+    border-color: transparent transparent red transparent;
+    border-style: solid;
+}
+```
+
+## CSS画一个扇形
+
+```
+#test {
+    width: 0px;
+    height: 0px;
+    border-width: 40px 20px;
+    border-color: transparent transparent red transparent;
+    border-style: solid;
+    border-radius: 20px;
+}
+```
+
+
+
 # JavaScript相关
 
 ## JS实现函数柯里化+偏函数组合应用
@@ -633,9 +660,7 @@ JS中Number数据类型遵循IEEE 754标准
 
 最终造成 0.1+0.2 !== 0.3 的结果
 
-注：JS二进制有效数字长度为53，最大安全数十进制（9007199254740991）为16位，因此0.1.toPrecision(16) = 0.10000000000000000导致 0.1 还
-
-是 0.1
+注：浮点数值的最高精度是 17 位小数，因此0.1.toPrecision(17) = 0.100000000000000000导致 0.1 还是 0.1
 
 解决方法:
 ```
@@ -649,24 +674,26 @@ function add(num1, num2) {
 
 ## 隐式转换
 
-转换布尔类型为false：NaN null undefined +0 -0 '空串' 以及H5废弃的document.all  （7）
+转换布尔类型为false：NaN null undefined +0 -0 '空串' 以及H5废弃的document.all   （7）
 
-转换为Number为0：false '空串' null     (3)  注意undefined转换为NaN
+转换为Number为0：false '空串' null      (3)  注意undefined转换为NaN
 
 转换为String，注意null，undefined不是调用toString()方法，而是直接返回 'null'  'undefined'
 
 判断的基本规则：
 
-对象 == 数字或字符串
+1.对象 == 基本数据类型
 toPrimitive(对象) ： 对象.valueOf().toString()
 
-布尔值 == 任何类型
+2.布尔值 == 任何类型
 Number(布尔值)：将布尔值转化为数字
 
-数字 == 字符串
+3.数字 == 字符串
 Number(字符串)：将字符串转化为数字
 
-undefined == null
+4.要比较相等性之前，不能将 null 和 undefined 转换成其他任何值。
+
+5.undefined == null
 true
 
 ```
@@ -685,6 +712,7 @@ consolo.log(![] == 0) // true []经过Boolean()为true取反为false
 console.log({} == !{}) // false {}布尔为true取反为false，Number后为0 {}valueOf().toString()为'[object Object]'Number()后为NaN
 console.log({} == {}) // false 引用不同
 console.log([] == []) // false 引用不同
+console.log(null == 0) // false 要比较相等性之前，不能将 null 和 undefined 转换成其他任何值。
 console.log('true' == true) // false，true转数字为1 'true'转数字为NaN
 ```
 
@@ -1224,7 +1252,7 @@ A instanceof B
 
 `Array.from(new Set(arr))`
 
-`arr.filter((item, index, arr) => arr.indexOf(item) === index)`
+`arr.filter((item, index) => arr.indexOf(item) === index)`
 
 `arr.reduce((prev, cur) => prev.includes(cur) ? prev : [...prev, cur], [])`
 
@@ -1245,7 +1273,7 @@ Reflect.ownKeys() 为 Object.getOwnPropertyNames() 与 Object.getOwnPropertySymb
 
 ### Array.prototype.slice.call(param)
 
-### Array.from(param)
+### Array.from(param) 接受伪数组和可迭代对象
 
 ## super关键字 与 super()
 
@@ -1292,13 +1320,13 @@ class关键字是以ES5组合继承为基础的一个语法糖，但是它和组
 
 2.类声明中的所有代码会自动运行在严格模式下，且无法退出严格模式
 
-3.类的所有方法都是不可枚举的，而自定义构造函数只有通过Object.defineProperty()才能将方法改为不可枚举
+3.类的所有实例方法都是不可枚举的，而自定义构造函数只有通过Object.defineProperty()才能将方法改为不可枚举
 
-4.类的所有方法内部都没有constructor，使用new调用类的方法会报错
+4.类的所有实例方法内部都没有constructor，使用new调用类的实例方法会报错
 
 5.调用类构造器时，不加new会报错
 
-6.在类的方法内部尝试重写类名会报错
+6.在类的实例方法内部尝试重写类名会报错
 
 ## Promise
 
@@ -1340,13 +1368,11 @@ ES11：Promise.settled()
 
 2.箭头函数没有prototype
 
-3.箭头函数不能用super(super关键字是对象原型的指针，且只能用在对象的简写方法中)
-
-4.箭头函数没有construct内部方法，不能用new调用
+3.箭头函数没有construct内部方法，不能用new调用
 
 什么时候使用箭头函数？
 
-当函数非对象的方法且不用做构造函数时，使用箭头函数
+非对象的方法且不用做构造函数时，使用箭头函数
 
 ## for in 和 for of 和 Object.keys()的区别
 
@@ -1500,7 +1526,7 @@ app.use(function(req, res, next) {
 ```
 ### postMessage()
 
-postMessage是HTML5 XMLHttRequest Level 2中的 API, 并且为数不多跨域跨域操作的window属性之一,它可用于解决以下方面的问题:
+postMessage是HTML5 XMLHttRequest Level 2中的 API, 并且为数不多跨域操作的window属性之一,它可用于解决以下方面的问题:
 
 1.页面和其打开的新窗口的数据传递
 
@@ -1567,7 +1593,7 @@ CSS的加载会阻塞渲染
 
 #### 重绘回流与硬件加速
 
-元素的位置的改变会引起回流和重绘，元素样式改变会引起重绘，影响浏览器性能
+元素的位置和尺寸的改变会引起回流和重绘，元素样式改变会引起重绘，影响浏览器性能
 
 因为GPU是专门为处理图形而设计，所以它在速度和能耗上更有效率。
 
@@ -1597,7 +1623,7 @@ Cookies的特点：
 
 1.遵循同源政策
 
-2.Cookies的大小限制在4KB左右，超过4KB直接截断
+2.Cookies的大小限制在4KB，超过4KB直接截断
 
 3.过多的Cookies会导致性能浪费，因为同一域名下的所有请求都会携带Cookies
 
@@ -1892,13 +1918,12 @@ DNS域名解析  >>> TCP分包 >>> IP寻路 >>> 找到服务器IP >>> TCP三次�
       if (now - last > delay) {
         clearTimeout(timer)
         timer = setTimeout(() => {
-          last = now
           console.log('====================================');
           console.log('节流');
           console.log('====================================');
         }, delay);
+        last = now
       }
-      last = now
     }
 ```
 
@@ -1933,15 +1958,22 @@ DNS域名解析  >>> TCP分包 >>> IP寻路 >>> 找到服务器IP >>> TCP三次�
 
 第四次挥手：客户端接收到带fin的数据包后，向服务端发送带ack的确认数据包，客户端在两个最长报文寿命周期后关闭，服务端在收到ack报文后关闭
 
+## TCP为什么三次握手四次挥手
+
+三次握手：为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误
+
+四次挥手：TCP全双工通信，客户端和服务端都存在收发两种状态
+
 ## TCP的流量控制
 
 通过滑动窗口机制有效控制数据发送方的数据发送速率
+
+发送窗口的上限值应该是拥塞窗口和接收窗口之间的最小值
 
 ## TCP的拥塞控制
 
 四种算法：慢开始，快重传，快恢复，拥塞避免
 
-发送窗口的上限值应该是拥塞窗口和接收窗口之间的最小值
 
 ## TCP UDP
 
@@ -2042,8 +2074,6 @@ DNS域名解析  >>> TCP分包 >>> IP寻路 >>> 找到服务器IP >>> TCP三次�
 
 ### OPTIONS：询问支持的方法
 
-### CONNECT：要求用隧道协议连接代理
-
 ## GET和POST的区别
 
 1.语义不同：GET用来获取数据，POST用来提交数据
@@ -2102,20 +2132,20 @@ Session是存在服务器的一种 用来存放用户数据的类HashTable结构
 1.存储位置不同：
 Cookie存在在客户端，Session存放在服务端
 
-2.安全性不同：
-Cookie存放在客户端，安全性较低，Session存放在服务器，安全性较高
-
-3.对服务器压力不同：
-Cookie存放在客户端，对服务器无压力，Session存放在服务器，每个用户都会生成一个Session，Session过多消耗服务器资源
-
-4.存储数据类型不同：
-Cookie只支持ASCII字符串，并需要编码方式存储为Unicode或二进制数据，而Session支持任意类型数据
-
-5.存储大小不同：
+2.存储大小不同：
 单个Cookie容量4KB，而Session大小没有限制（但为了服务器性能考虑，也不宜存放过多数据）
 
-6.存储有效期不同：
+3.存储数据类型不同：
+Cookie只支持ASCII字符串，并需要编码方式存储为Unicode或二进制数据，而Session支持任意类型数据
+
+4.存储有效期不同：
 Cookie可以设置过期时间长时间存储，而Session在客户端关闭或Session超时都会失效，但如果Cookie不设置过期时间，那Cookie为会话期Cookie
+
+5.安全性不同：
+Cookie存放在客户端，安全性较低，Session存放在服务器，安全性较高
+
+6.对服务器压力不同：
+Cookie存放在客户端，对服务器无压力，Session存放在服务器，每个用户都会生成一个Session，Session过多消耗服务器资源
 
 7.域支持范围不同：
 Cookie可通过设置Domain跨子域访问，Session不支持跨域名访问
@@ -2126,7 +2156,7 @@ HTTPS = HTTP +TSL/SSL协议加密
 
 HTTP属于明文传输，所以存在 信息窃听 信息篡改 信息劫持 的问题
 
-而 TSL/SSL 利用非对称加密实实现身份认证和密钥协商，对称加密采用协商的密钥对数据加密，基于散列函数验证信息的完整性。
+而 TSL/SSL 利用非对称加密实现身份认证和密钥协商，对称加密采用协商的密钥对数据加密，基于散列函数验证信息的完整性。
 
 非对称加密：客户端共享公钥，服务端掌握私钥，客户端信息只能服务端解密，客户端向服务器发送唯一信息
 
@@ -2154,13 +2184,65 @@ HTTPS的工作流程
 
 1.HTTP明文传输，HTTPS加密传输
 
-2.HTTP需要SSL/TSL证书
+2.HTTPS需要SSL/TSL证书
 
 3.HTTP默认端口80，HTTPS默认端口443
 
 4.HTTPS更利于SEO
 
 5.SSL/TSL加密在传输层与应用层之间，HTTP基于应用层
+
+## HTTP2.0
+
+### HTTP1.1存在的问题
+
+#### 1.TCP数量限制
+
+对于同一域名，TCP连接数的限制6~8个，为了解决数量限制，出现了 域名分片 技术：资源分域，将资源放在不同域名下（如二级子域名下）
+缺点：每个TCP连接都需要DNS查询，三次握手等占用额外的CPU和资源
+
+#### 2.线头阻塞问题
+
+每个TCP连接同时只能处理一个请求，如果上一个请求未响应，则会阻塞后续请求响应
+
+#### 3.Header内容过多，没有压缩优化方案
+
+#### 4.为了尽可能减少请求数，需要做合并文件，雪碧图，资源内联等优化工作，造成单个请求延迟过高，且内联的资源不能有效地使用缓存机制
+
+
+### HTTP2.0的优势
+
+#### 1.二进制分帧
+
+帧是数据传输的最小单位，以二进制传输代替原本的明文传输，无需再使用域名分片，合并文件，雪碧图，资源内联
+
+#### 2.多路复用
+
+每个TCP连接上，可以不断向对方发送数据帧，每帧的 stream identifier 标明这个帧属于哪个流，然后在对方接收时，根据 stream identifier 将同一流的所有帧组成一整块数据
+
+流的概念实现了单连接上多请求-响应并行，解决了HTTP1.1的TCP数量限制，线头阻塞的问题
+
+HTTP2.0只需要建立一个TCP连接
+
+还可以对 stream 指定优先级，优先级越高的越先响应
+
+#### 3.服务端推送
+
+浏览器发送一个请求，服务器主动向浏览器推送与这个请求相关的资源，这样浏览器就不用发送后续请求
+
+相比于HTTP1.1资源内联的优势在于：
+
+1.客户端可以缓存推送的资源
+
+2.客户端可以拒收推送的资源
+
+3.推送资源可以由不同页面共享
+
+4.服务器可以按照优先级推送资源
+
+#### 4.Header压缩
+
+使用HPACK算法压缩Header
 
 # React相关
 
@@ -2310,7 +2392,7 @@ HTTPS的工作流程
       const keyIndex = partition(array, low, high)
       // 比基准值小的左边进行递归快排
       quick(array, low, keyIndex - 1)
-      // 比基准值小的右边进行递归快排
+      // 比基准值大的右边进行递归快排
       quick(array, keyIndex + 1, high)
     }
     // quick(array, 0, array.length-1)
