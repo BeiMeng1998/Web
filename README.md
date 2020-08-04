@@ -31,7 +31,7 @@ H5的文档声明，声明当前网页是按照HTML5标准编写的
 
 而在兼容模式下，页面则以宽松向后兼容的方式显示，模拟老式浏览器的行为以防止站点无法工作
 
-比如：若不声明DOCTYPE类型，IE678浏览器会将盒子模型解释为IE盒子模型，FireFox等会将其解释为W3C盒子模型
+比如：若不声明DOCTYPE类型，IE6浏览器会将盒子模型解释为IE盒子模型，FireFox等会将其解释为W3C盒子模型
 
 所以，为了页面的正常显示，一定要写文档声明
 
@@ -822,7 +822,7 @@ getElementsByName() querySelectorAll()
 
 ##### 1.获取子节点/子元素
 
-子节点：childNodes(NodeList) firstChild lastChild
+子节点：childNodes(NodeList动态) firstChild lastChild
 
 子元素：children(HTMLCollection)
 
@@ -1061,7 +1061,7 @@ JavaScript采用的是词法作用域（静态作用域）
 
 ## 作用域链
 
-通过词法环境的对外部词法环境的引用（outer）将作用域链起
+通过词法环境的对外部词法环境的引用（scope）将作用域链起
 
 变量可通过作用域链逐层向上查找
 
@@ -1069,13 +1069,8 @@ JavaScript采用的是词法作用域（静态作用域）
 
 ### 什么是闭包？
 
-函数以及其对外部词法环境的引用捆绑称为闭包
-
-### 如何产生闭包？
-
-1.当内部函数引用外部词法环境
-
-2.执行外部函数
+高程：有权访问另一函数作用域中的变量的函数
+MDN：函数以及其对外部词法环境的引用捆绑称为闭包
 
 ### 闭包的作用
 
@@ -1091,7 +1086,7 @@ JavaScript采用的是词法作用域（静态作用域）
 
 ### 进程
 
-程序的一次执行占有一片独有的内存空间，这块内存空间称为进程
+进程是资源（CPU、内存等）分配的基本单位，它是程序执行时的一个实例。程序运行时系统就会创建一个进程，并为它分配资源
 
 ### 线程
 
@@ -1461,20 +1456,14 @@ for(let [key, value] of Object.entries(obj)) {
 ```
     // 手写jsonp
     function jsonp(configObj) {
-      const fnName = configObj.callback + Math.random().toString().replace('.', '')
-      const data = configObj.data
+      const fnName = configObj.callbackName
       window[fnName] = configObj.success
-      let param = ''
-      for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-          param +=`&${key}=${data[key]}`
-        }
-      }
       const scriptNode = document.createElement('script')
-      scriptNode.src = `${configObj.url}?callback=${fnName}${param}`
+      scriptNode.src = `${configObj.url}?callback=${fnName}`
       document.body.appendChild(scriptNode)
       scriptNode.onload = () => {
         document.body.removeChild(scriptNode)
+        window[fnName] = null
       }
     }
 ```
@@ -1615,7 +1604,7 @@ CSS的加载会阻塞渲染
 
 由于HTTP是无状态协议，Cookies的出现是为了保存HTTP状态
 
-服务器发送请求set-cookie，浏览器保存Cookies之后浏览器的每次HTTP请求都会携带Cookies的信息
+服务器发送请求set-cookie，浏览器保存Cookies之后同域名下的每次HTTP请求都会携带Cookies的信息
 
 JS也可通过document.cookie读取和设置
 
@@ -1623,7 +1612,7 @@ Cookies的特点：
 
 1.遵循同源政策
 
-2.Cookies的大小限制在4KB，超过4KB直接截断
+2.Cookies的大小限制在4KB
 
 3.过多的Cookies会导致性能浪费，因为同一域名下的所有请求都会携带Cookies
 
