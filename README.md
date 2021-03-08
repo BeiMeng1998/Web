@@ -1487,11 +1487,11 @@ Content-Type为 text/plain, multipart/form-data, application/x-www-form-urlencod
 #### 预检请求
 
 ```
-let express = require('express')
-let app = express()
-let whiteList = ['http://localhost:3000'] //设置白名单
+const express = require('express')
+const app = express()
+const whiteList = ['http://localhost:3000'] //设置白名单
 app.use(function(req, res, next) {
-  let origin = req.headers.origin
+  const origin = req.headers.origin
   if (whiteList.includes(origin)) {
     // 设置哪个源可以访问我
     res.setHeader('Access-Control-Allow-Origin', origin)
