@@ -764,17 +764,17 @@ JS三个包装类：Number() String() Boolean()
 
 这个对象我们称为函数执行的 上下文对象，根据函数的调用环境的不同，this会指向不同的对象
 
+一句话：this指向调用它的对象
+
 1.以函数的形式调用时，this指向window
 
 2.以方法的形式调用时，this就是调用方法的那个对象
 
 3.当以构造函数的形式调用时，this就是新创建的实例对象
 
-4.使用call() apply() bind()调用时，this是指定的第一个参数
+4.使用call() apply() bind()调用时，this自由指定
 
-5.在绑定监听时，给谁绑定，回调函数中的this就是谁
-
-6.箭头函数自身没有this，箭头函数的this继承的是外部函数的this
+5.箭头函数自身没有this，箭头函数的this继承的是最近的作用域的this
 
 ## call() apply() bind()的区别
 
