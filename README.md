@@ -772,9 +772,11 @@ JS三个包装类：Number() String() Boolean()
 
 3.当以构造函数的形式调用时，this就是新创建的实例对象
 
-4.使用call() apply() bind()调用时，this自由指定
+4.使用call() apply() bind()调用时，this自定义
 
-5.箭头函数自身没有this，箭头函数的this继承的定义时对象的this
+5.箭头函数自身没有this，箭头函数的this继承的是定义时外层最近的对象的this 
+
+6.严格模式下，函数this指向undefined
 
 ## call() apply() bind()的区别
 
