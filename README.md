@@ -774,7 +774,7 @@ JS三个包装类：Number() String() Boolean()
 
 4.使用call() apply() bind()调用时，this自由指定
 
-5.箭头函数自身没有this，箭头函数的this继承的是最近的作用域的this
+5.箭头函数自身没有this，箭头函数的this继承的定义时对象的this
 
 ## call() apply() bind()的区别
 
