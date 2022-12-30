@@ -1,22 +1,5 @@
 # HTML
 
-## HTML和XHTML有什么区别
-
-HTML(HyperText Markup Language)超文本标记语言
-
-XHTML(Extensible HyperText Markup Language)可扩展超文本标记语言
-
-XHTML的表现方式与HTML类似，但比HTML更加严格
-
-1.XHTML元素必须被正确嵌套
-
-2.XHTML元素必须被关闭
-
-3.XHTML标签名必须小写
-
-4.XHTML必须有根元素
-
-
 ## !DOCTYPE文档声明的作用
 
 H5不再是SGML的子集，所以H5不需要对DTD进行引用
