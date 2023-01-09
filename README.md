@@ -1571,7 +1571,7 @@ CSS的加载会阻塞渲染
 
 因为GPU是专门为处理图形而设计，所以它在速度和能耗上更有效率。
 
-通过GPU硬件加速的方式（transform、opacity、filters），声明一个新的复合图层，它会单独分配资源，这样就不会影响默认复合图层(标准文档流以及position为absolute，fixed都属于默认复合层)，从而避免重绘与回流
+通过GPU硬件加速的方式（transform、opacity、filters、will-change），声明一个新的复合图层，它会单独分配资源，这样就不会影响默认复合图层(标准文档流以及position为absolute，fixed都属于默认复合层)，从而避免重绘与回流
 
 注意:如果a是一个复合图层，而且b在a上面，那么b也会被隐式转为一个复合图层
 
