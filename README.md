@@ -382,14 +382,14 @@ body {
 
 当两个空的块级元素嵌套时，如果内部块设置有margin-top属性，那么内部块的margin-top属性会绑架父元素（即父元素也会出现相应的margin-top行为）
 
-解决方案1：父元素通过before伪元素与子元素隔开
+父元素通过before伪元素与子元素隔开
 ```
 #warp:before {
     content: "";
     display: table;
 }
 ```
-解决方案2：父元素开启BFC，使得父子不属于同一个BFC
+
 
 ## 子元素浮动高度塌陷
 
