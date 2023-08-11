@@ -650,7 +650,7 @@ body {
 
 ## 子元素浮动高度塌陷
 
-伪元素after content: '' display: table;
+父元素伪元素after content: ''; display: table; clear: both;
 
 ## IE CSS hack
 
